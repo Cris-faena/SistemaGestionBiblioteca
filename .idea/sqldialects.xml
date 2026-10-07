@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SqlDialectMappings">
+    <file url="file://$PROJECT_DIR$/src/sql/1_Script_crea_BD_biblioteca.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/src/sql/2_Script_poblar_BD_biblioteca.sql" dialect="GenericSQL" />
+  </component>
+</project>
