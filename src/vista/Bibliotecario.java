@@ -57,6 +57,10 @@ public class Bibliotecario extends JFrame
     private JLabel lblStock;
     private JLabel lblFiltrarLibro;
     private JLabel lblIDCategoriaLibro;
+    private JTabbedPane tabbedPane1;
+    private JPanel PanelBotonesLibros;
+    private JPanel PanelFiltrosLibro;
+    private JPanel PanelTextosLibros;
 
     private int idCategoriaSeleccionado = -1;
     private int idLibroSeleccionado = -1;
@@ -78,8 +82,14 @@ public class Bibliotecario extends JFrame
 
 
         PanelPrincipalBiblio.setBackground(new Color(245, 222, 179));
-        PanelSubLibros.setBackground(new Color(250, 240, 230));
+
         PanelSubCategorias.setBackground(new Color(250, 240, 230));
+        PanelSubLibros.setBackground(new Color(250, 240, 230));
+
+        PanelBotonesLibros.setBackground(new Color(173, 216, 230));
+        PanelTextosLibros.setBackground(new Color(250, 240, 230));
+        PanelFiltrosLibro.setBackground(new Color(250, 240, 230));
+
 
         jspTablaCategoria.setViewportView(tblCategoria);
         //jspTablaCategoria.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -93,8 +103,52 @@ public class Bibliotecario extends JFrame
         jspSubLibros.setMaximumSize(new Dimension(770, 300));
         jspSubLibros.setMinimumSize(new Dimension(760, 300));
 
+        txtTituloLibros.setMaximumSize(new Dimension(120, 30));
+        txtTituloLibros.setMinimumSize(new Dimension(120, 30));
+        txtTituloLibros.setPreferredSize(new Dimension(120, 30));
 
+        txtAutor.setMaximumSize(new Dimension(120, 30));
+        txtAutor.setMinimumSize(new Dimension(120, 30));
+        txtAutor.setPreferredSize(new Dimension(120, 30));
 
+        txtIsbn.setMaximumSize(new Dimension(120, 30));
+        txtIsbn.setMinimumSize(new Dimension(120, 30));
+        txtIsbn.setPreferredSize(new Dimension(120, 30));
+
+        txtEditorial.setMaximumSize(new Dimension(120, 30));
+        txtEditorial.setMinimumSize(new Dimension(120, 30));
+        txtEditorial.setPreferredSize(new Dimension(120, 30));
+
+        txtStock.setMaximumSize(new Dimension(50, 30));
+        txtStock.setMinimumSize(new Dimension(50, 30));
+        txtStock.setPreferredSize(new Dimension(50, 30));
+
+        txtIdCategoriaLibro.setMaximumSize(new Dimension(50, 30));
+        txtIdCategoriaLibro.setMinimumSize(new Dimension(50, 30));
+        txtIdCategoriaLibro.setPreferredSize(new Dimension(50, 30));
+
+        txtFiltrarLibros.setMaximumSize(new Dimension(170, 30));
+        txtFiltrarLibros.setMinimumSize(new Dimension(170, 30));
+        txtFiltrarLibros.setPreferredSize(new Dimension(170, 30));
+
+        // Se edita el tamaño de los botones
+        btnAgregarLibros.setMaximumSize(new Dimension(100, 30));
+        btnAgregarLibros.setMinimumSize(new Dimension(100, 30));
+        btnAgregarLibros.setPreferredSize(new Dimension(100, 30));
+        btnEditarLibros.setMaximumSize(new Dimension(100, 30));
+        btnEditarLibros.setMinimumSize(new Dimension(100, 30));
+        btnEditarLibros.setPreferredSize(new Dimension(100, 30));
+        btnEliminarLibros.setMaximumSize(new Dimension(100, 30));
+        btnEliminarLibros.setMinimumSize(new Dimension(100, 30));
+        btnEliminarLibros.setPreferredSize(new Dimension(100, 30));
+        btnLimpiarLibros.setMaximumSize(new Dimension(100, 30));
+        btnLimpiarLibros.setMinimumSize(new Dimension(100, 30));
+        btnLimpiarLibros.setPreferredSize(new Dimension(100, 30));
+
+        // Se edita el tamaño de los JComboBox
+        jcbLibros.setMaximumSize(new Dimension(100, 30));
+        jcbLibros.setMinimumSize(new Dimension(100, 30));
+        jcbLibros.setPreferredSize(new Dimension(100, 30));
         // Se agrega funcionalidades a los botones del panel de ingreso de categorías
         btnAgregarCategoria.addActionListener(event -> {agregarCategoria();});
         btnEditarCategoria.addActionListener(event -> {editarCategoria();});
@@ -124,6 +178,12 @@ public class Bibliotecario extends JFrame
         btnLimpiarLibros.addActionListener(event -> {limpiarLibro();});
         btnListarLibros.addActionListener(event -> {listarLibro();});
         btnFiltrarLibro.addActionListener(event -> {filtrarLibros();});
+
+        tblLibros.setBackground(new Color(255, 245, 230));
+        tblLibros.getTableHeader().setBackground(new Color(240, 220, 200));
+        tblLibros.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
+        tblLibros.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        tblLibros.setRowHeight(22);
 
         // Se cargan los JComboBox del panel
         cargarCategoriasJComboBoxCategoria();
@@ -227,18 +287,18 @@ public class Bibliotecario extends JFrame
         tblLibros.setModel(modeloTablaLibros);
         tblLibros.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
-        tblLibros.getColumnModel().getColumn(0).setPreferredWidth(50);   // ID_Libro
-        tblLibros.getColumnModel().getColumn(0).setMinWidth(50);
-        tblLibros.getColumnModel().getColumn(1).setPreferredWidth(205); // Titulo
-        tblLibros.getColumnModel().getColumn(1).setMinWidth(205);
-        tblLibros.getColumnModel().getColumn(2).setPreferredWidth(137);  // Autor
-        tblLibros.getColumnModel().getColumn(2).setMinWidth(137);
-        tblLibros.getColumnModel().getColumn(3).setPreferredWidth(100);  // ISBN
-        tblLibros.getColumnModel().getColumn(4).setPreferredWidth(100);   // Editorial
-        tblLibros.getColumnModel().getColumn(5).setPreferredWidth(80);  // Stock
-        tblLibros.getColumnModel().getColumn(5).setMinWidth(80);
-        tblLibros.getColumnModel().getColumn(6).setPreferredWidth(80);  // Id_categoría
-        tblLibros.getColumnModel().getColumn(6).setMinWidth(80);
+        tblLibros.getColumnModel().getColumn(0).setPreferredWidth(70);   // ID_Libro
+        tblLibros.getColumnModel().getColumn(0).setMinWidth(70);
+        tblLibros.getColumnModel().getColumn(1).setPreferredWidth(305); // Titulo
+        tblLibros.getColumnModel().getColumn(1).setMinWidth(305);
+        tblLibros.getColumnModel().getColumn(2).setPreferredWidth(145);  // Autor
+        tblLibros.getColumnModel().getColumn(2).setMinWidth(145);
+        tblLibros.getColumnModel().getColumn(3).setPreferredWidth(120);  // ISBN
+        tblLibros.getColumnModel().getColumn(4).setPreferredWidth(120);   // Editorial
+        tblLibros.getColumnModel().getColumn(5).setPreferredWidth(90);  // Stock
+        tblLibros.getColumnModel().getColumn(5).setMinWidth(90);
+        tblLibros.getColumnModel().getColumn(6).setPreferredWidth(95);  // Id_categoría
+        tblLibros.getColumnModel().getColumn(6).setMinWidth(95);
 
         tblLibros.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
