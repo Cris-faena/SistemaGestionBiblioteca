@@ -1,8 +1,6 @@
 package DAO.impl;
 
 import DAO.PrestamoDAO;
-import modelo.Categoria;
-import modelo.CategoriaLibros;
 import modelo.Prestamos;
 import util.ConexionBD;
 
@@ -29,8 +27,8 @@ public class PrestamoDAOImpl implements PrestamoDAO
         {
             ps.setInt(1, prestamo.getId_estudiante());
             ps.setInt(2, prestamo.getId_libro());
-            ps.setDate(3, (Date) prestamo.getFecha_prestamo());
-            ps.setDate(4, (Date) prestamo.getFecha_devolucion());
+            ps.setDate(3, prestamo.getFecha_prestamo());
+            ps.setDate(4, prestamo.getFecha_devolucion());
             ps.setBoolean(5, prestamo.isDevuelto());
 
             return ps.executeUpdate() > 0;
@@ -57,8 +55,8 @@ public class PrestamoDAOImpl implements PrestamoDAO
         {
             ps.setInt(1, prestamo.getId_estudiante());
             ps.setInt(2, prestamo.getId_libro());
-            ps.setDate(3, (Date) prestamo.getFecha_prestamo());
-            ps.setDate(4, (Date) prestamo.getFecha_devolucion());
+            ps.setDate(3, prestamo.getFecha_prestamo());
+            ps.setDate(4, prestamo.getFecha_devolucion());
             ps.setBoolean(5, prestamo.isDevuelto());
             ps.setInt(6, prestamo.getId());
             return ps.executeUpdate() > 0;
@@ -107,7 +105,7 @@ public class PrestamoDAOImpl implements PrestamoDAO
      */
     public Prestamos buscarPorId(int idPrestamo)
     {
-        // Almacena esta consulta SQL en un String, en donde se busquen todas las categorías de la tabla categoria, en donde el "id" sea el parámetro ingresado
+        // Almacena esta consulta SQL en un String, en donde se busquen todas los Préstamos de la tabla préstamos, en donde el "id" sea el parámetro ingresado
         String sql = "SELECT * FROM prestamos WHERE id= ?";
         // Intenta conectar a la base de datos y almacena la consulta SQL en un objeto "ps" pre-compilado
         try (Connection conn = ConexionBD.getInstancia().obtenerConexion();

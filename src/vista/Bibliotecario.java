@@ -3,6 +3,7 @@ package vista;
 import controlador.ControladorCategoria;
 import controlador.ControladorEstudiante;
 import controlador.ControladorLibros;
+import controlador.ControladorPrestamo;
 import modelo.*;
 
 import javax.swing.*;
@@ -87,18 +88,51 @@ public class Bibliotecario extends JFrame {
     private JTable tblEstudiante;
     private JScrollPane jspEstudiante;
     private JPanel PaneltxtEstudiantes;
+    private JLabel lblId_EstudiantePrestamo;
+    private JTextField txtIdEstudiantePrestamo;
+    private JLabel lblIdLibroPrestamo;
+    private JTextField txtIdLibroPrestamo;
+    private JLabel lblFechaPrestamo;
+    private JTextField txtFechaPrestamo;
+    private JLabel lblDevuelvoPrestamo;
+    private JPanel PanelTextosPrestamos;
+    private JComboBox jcbDevuelto;
+    private JPanel PanelBotonesPrestamos;
+    private JButton btnAgregarPrestamos;
+    private JButton btnEditarPrestamos;
+    private JButton btnEliminarPrestamo;
+    private JButton btnLimpiarPrestamos;
+    private JPanel PanelFiltrosPrestamos;
+    private JLabel lblFiltrarPrestamos;
+    private JComboBox jcbFiltrarPrestamos;
+    private JTextField txtFiltroPrestamos;
+    private JButton btnFiltrarPrestamos;
+    private JButton btnListarPrestamos;
+    private JPanel PanelTramitarPrestamos;
+    private JTextField txtTramitarPorId;
+    private JLabel lblTramitarPrestamos;
+    private JButton btnEjecutarPrestamo;
+    private JScrollPane jspTablaPrestamos;
+    private JScrollPane jspParaArea;
+    private JTable tblPrestamos;
+    private JTextArea jtaAreaPrestamos;
+    private JLabel lblFechaDevolucionPrestamo;
+    private JTextField txtFechaDevolucionPrestamo;
 
     private int idCategoriaSeleccionado = -1;
     private int idLibroSeleccionado = -1;
     private int idEstudianteSeleccionado = -1;
+    private int idPrestamoSeleccionado = -1;
 
     private DefaultTableModel modeloTablaCategoria;
     private DefaultTableModel modeloTablaLibros;
     private DefaultTableModel modeloTablaEstudiante;
+    private DefaultTableModel modeloTablaPrestamos;
 
     private final ControladorCategoria controladorCategoria = new ControladorCategoria();
     private final ControladorLibros controladorLibros = new ControladorLibros();
     private final ControladorEstudiante controladorEstudiante = new ControladorEstudiante();
+    private final ControladorPrestamo controladorPrestamo = new ControladorPrestamo();
 
     public Bibliotecario() {
         setTitle("Bibliotecario");
@@ -126,9 +160,13 @@ public class Bibliotecario extends JFrame {
         PanelBotonesEstudiante.setBackground(new Color(250, 240, 230));
         PanelFiltrosEstudiante.setBackground(new Color(173, 216, 230));
 
+        PanelTextosPrestamos.setBackground(new Color(250, 240, 230));
+        PanelBotonesPrestamos.setBackground(new Color(250, 240, 230));
+        PanelFiltrosPrestamos.setBackground(new Color(173, 216, 230));
+        PanelTramitarPrestamos.setBackground(new Color(255, 220, 220));
+
 
         jspTablaCategoria.setViewportView(tblCategoria);
-        //jspTablaCategoria.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         jspTablaCategoria.setPreferredSize(new Dimension(200, 300));
         jspTablaCategoria.setMaximumSize(new Dimension(200, 300));
         jspTablaCategoria.setMinimumSize(new Dimension(200, 300));
@@ -138,6 +176,8 @@ public class Bibliotecario extends JFrame {
         jspSubLibros.setPreferredSize(new Dimension(760, 300));
         jspSubLibros.setMaximumSize(new Dimension(770, 300));
         jspSubLibros.setMinimumSize(new Dimension(760, 300));
+
+        jspTablaPrestamos.setViewportView(tblPrestamos);
 
         txtTituloLibros.setMaximumSize(new Dimension(120, 30));
         txtTituloLibros.setMinimumSize(new Dimension(120, 30));
@@ -162,6 +202,22 @@ public class Bibliotecario extends JFrame {
         txtIdCategoriaLibro.setMaximumSize(new Dimension(50, 30));
         txtIdCategoriaLibro.setMinimumSize(new Dimension(50, 30));
         txtIdCategoriaLibro.setPreferredSize(new Dimension(50, 30));
+
+        txtIdEstudiantePrestamo.setMaximumSize(new Dimension(50, 30));
+        txtIdEstudiantePrestamo.setMinimumSize(new Dimension(50, 30));
+        txtIdEstudiantePrestamo.setPreferredSize(new Dimension(50, 30));
+
+        txtIdLibroPrestamo.setMinimumSize(new Dimension(50, 30));
+        txtIdLibroPrestamo.setMaximumSize(new Dimension(50, 30));
+        txtIdLibroPrestamo.setPreferredSize(new Dimension(50, 30));
+
+        txtFechaPrestamo.setMaximumSize(new Dimension(100, 30));
+        txtFechaPrestamo.setMinimumSize(new Dimension(100, 30));
+        txtFechaPrestamo.setPreferredSize(new Dimension(100, 30));
+
+        txtFechaDevolucionPrestamo.setMaximumSize(new Dimension(100, 30));
+        txtFechaDevolucionPrestamo.setMinimumSize(new Dimension(100, 30));
+        txtFechaDevolucionPrestamo.setPreferredSize(new Dimension(100, 30));
 
         txtFiltrarLibros.setMaximumSize(new Dimension(170, 30));
         txtFiltrarLibros.setMinimumSize(new Dimension(170, 30));
@@ -194,6 +250,13 @@ public class Bibliotecario extends JFrame {
         txtEstudiantejcb.setMaximumSize(new Dimension(170, 30));
         txtEstudiantejcb.setMinimumSize(new Dimension(170, 30));
         txtEstudiantejcb.setPreferredSize(new Dimension(170, 30));
+
+        txtFiltroPrestamos.setMaximumSize(new Dimension(170, 30));
+        txtFiltroPrestamos.setMinimumSize(new Dimension(170, 30));
+        txtFiltroPrestamos.setPreferredSize(new Dimension(170, 30));
+        txtTramitarPorId.setMaximumSize(new Dimension(170, 30));
+        txtTramitarPorId.setMinimumSize(new Dimension(170, 30));
+        txtTramitarPorId.setPreferredSize(new Dimension(170, 30));
 
         // Se edita el tamaño de los botones
         btnAgregarLibros.setMaximumSize(new Dimension(100, 30));
@@ -228,6 +291,28 @@ public class Bibliotecario extends JFrame {
         btnListarEstudiante.setMinimumSize(new Dimension(100, 30));
         btnListarEstudiante.setPreferredSize(new Dimension(100, 30));
 
+        btnAgregarPrestamos.setMaximumSize(new Dimension(100, 30));
+        btnAgregarPrestamos.setMinimumSize(new Dimension(100, 30));
+        btnAgregarPrestamos.setPreferredSize(new Dimension(100, 30));
+        btnEditarPrestamos.setMaximumSize(new Dimension(100, 30));
+        btnEditarPrestamos.setMinimumSize(new Dimension(100, 30));
+        btnEditarPrestamos.setPreferredSize(new Dimension(100, 30));
+        btnEliminarPrestamo.setMaximumSize(new Dimension(100, 30));
+        btnEliminarPrestamo.setMinimumSize(new Dimension(100, 30));
+        btnEliminarPrestamo.setPreferredSize(new Dimension(100, 30));
+        btnLimpiarPrestamos.setMaximumSize(new Dimension(100, 30));
+        btnLimpiarPrestamos.setMinimumSize(new Dimension(100, 30));
+        btnLimpiarPrestamos.setPreferredSize(new Dimension(100, 30));
+        btnFiltrarPrestamos.setMaximumSize(new Dimension(100, 30));
+        btnFiltrarPrestamos.setMinimumSize(new Dimension(100, 30));
+        btnFiltrarPrestamos.setPreferredSize(new Dimension(100, 30));
+        btnListarPrestamos.setMaximumSize(new Dimension(100, 30));
+        btnListarPrestamos.setMinimumSize(new Dimension(100, 30));
+        btnListarPrestamos.setPreferredSize(new Dimension(100, 30));
+        btnEjecutarPrestamo.setMaximumSize(new Dimension(100, 30));
+        btnEjecutarPrestamo.setMinimumSize(new Dimension(100, 30));
+        btnEjecutarPrestamo.setPreferredSize(new Dimension(100, 30));
+
         // Se edita el tamaño de los JComboBox
         jcbLibros.setMaximumSize(new Dimension(100, 30));
         jcbLibros.setMinimumSize(new Dimension(100, 30));
@@ -240,6 +325,14 @@ public class Bibliotecario extends JFrame {
         jcbEstudiante.setMaximumSize(new Dimension(100, 30));
         jcbEstudiante.setMinimumSize(new Dimension(100, 30));
         jcbEstudiante.setPreferredSize(new Dimension(100, 30));
+
+        jcbDevuelto.setMaximumSize(new Dimension(100, 30));
+        jcbDevuelto.setMinimumSize(new Dimension(100, 30));
+        jcbDevuelto.setPreferredSize(new Dimension(100, 30));
+
+        jcbFiltrarPrestamos.setMaximumSize(new Dimension(100, 30));
+        jcbFiltrarPrestamos.setMinimumSize(new Dimension(100, 30));
+        jcbFiltrarPrestamos.setPreferredSize(new Dimension(100, 30));
 
         // Se agrega funcionalidades a los botones del panel de ingreso de categorías
         btnAgregarCategoria.addActionListener(event -> {
@@ -342,14 +435,18 @@ public class Bibliotecario extends JFrame {
         cargarCategoriasJComboBoxCategoria();
         cargarCategoriasJComboBoxLibros();
         cargarCategoriasJComboBoxEstudiante();
+        cargarCategoriasJComboBoxPrestamosDevueltos();
+        cargarCategoriasJComboBoxPrestamos();
         // Se inicializan las tablas del panel
         inicializarTablaCategorias();
         inicializarTablaLibros();
         inicializarTablaEstudiantes();
+        inicializarTablaPrestamos();
         // Se cargan las tablas de la BD.
         cargarTablaCategoria();
         cargarTablaLibros();
         cargarTablaEstudiantes();
+        cargarTablaPrestamos();
 
     }
     // Acá termina el constructor
@@ -554,6 +651,51 @@ public class Bibliotecario extends JFrame {
         }
     }
 
+    private void inicializarTablaPrestamos() {
+        String[] columnas = {"id", "id_estudiante", "id_libro", "fecha_préstamo", "fecha_devolución", "devuelto"};
+        modeloTablaPrestamos = new DefaultTableModel(columnas, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        tblPrestamos.setModel(modeloTablaPrestamos);
+        tblPrestamos.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+
+        tblPrestamos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        tblPrestamos.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                int fila = tblPrestamos.getSelectedRow();
+                if (fila >= 0) {
+                    idPrestamoSeleccionado = Integer.parseInt(modeloTablaPrestamos.getValueAt(fila, 0).toString());
+                    txtIdEstudiantePrestamo.setText(modeloTablaPrestamos.getValueAt(fila, 1).toString());
+                    txtIdLibroPrestamo.setText(modeloTablaPrestamos.getValueAt(fila, 2).toString());
+                    txtFechaPrestamo.setText(modeloTablaPrestamos.getValueAt(fila, 3).toString());
+                    txtFechaDevolucionPrestamo.setText(modeloTablaPrestamos.getValueAt(fila, 4).toString());
+                    jcbDevuelto.setSelectedItem(modeloTablaPrestamos.getValueAt(fila, 5).toString());
+                }
+            }
+        });
+    }
+
+    private void cargarTablaPrestamos()
+    {
+        modeloTablaPrestamos.setRowCount(0); // limpia la tabla
+
+        for (Prestamos p : controladorPrestamo.obtenerTodosLosPrestamos())
+        {
+            modeloTablaPrestamos.addRow(new Object[]{
+                    p.getId(),
+                    p.getId_estudiante(),
+                    p.getId_libro(),
+                    p.getFecha_prestamo(),
+                    p.getFecha_devolucion(),
+                    p.isDevuelto()
+            });
+        }
+    }
+
     /**
      * Método que carga los valores iniciales del JComboBOx del Panel "categorías"
      */
@@ -580,6 +722,28 @@ public class Bibliotecario extends JFrame {
         jcbEstudiante.addItem("ID");
         jcbEstudiante.addItem("Nombre");
     }
+
+    /**
+     * Método que carga los valores iniciales del JComboBOx del Panel "Prestamos" (devueltos).
+     */
+    private void cargarCategoriasJComboBoxPrestamosDevueltos()
+    {
+        jcbDevuelto.removeAllItems();
+        jcbDevuelto.addItem("true");
+        jcbDevuelto.addItem("false");
+    }
+
+    /**
+     * Método que carga los valores iniciales del JComboBOx del Panel "Prestamos"
+     */
+    private void cargarCategoriasJComboBoxPrestamos()
+    {
+        jcbFiltrarPrestamos.removeAllItems();
+        jcbFiltrarPrestamos.addItem("ID");
+        jcbFiltrarPrestamos.addItem("Devuelto");
+    }
+
+
 
     // ===================== AGREGAR CATEGORÍA =====================
 

@@ -1,7 +1,7 @@
 package modelo;
 
-import java.time.LocalDate;
-import java.util.Date;
+import java.sql.Date;
+
 
 /**
  * Clase que representa una lista con los préstamos de los libros de la biblioteca.
