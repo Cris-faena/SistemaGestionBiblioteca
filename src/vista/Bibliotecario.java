@@ -1,9 +1,6 @@
 package vista;
 
-import controlador.ControladorCategoria;
-import controlador.ControladorEstudiante;
-import controlador.ControladorLibros;
-import controlador.ControladorPrestamo;
+import controlador.*;
 import modelo.*;
 
 import javax.swing.*;
@@ -11,9 +8,6 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.text.ParseException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -138,6 +132,7 @@ public class Bibliotecario extends JFrame {
     private final ControladorLibros controladorLibros = new ControladorLibros();
     private final ControladorEstudiante controladorEstudiante = new ControladorEstudiante();
     private final ControladorPrestamo controladorPrestamo = new ControladorPrestamo();
+    private final ControladorBibliotecario controladorBibliotecario = new ControladorBibliotecario();
 
     public Bibliotecario() {
         setTitle("Bibliotecario");
@@ -169,6 +164,12 @@ public class Bibliotecario extends JFrame {
         PanelBotonesPrestamos.setBackground(new Color(250, 240, 230));
         PanelFiltrosPrestamos.setBackground(new Color(173, 216, 230));
         PanelTramitarPrestamos.setBackground(new Color(255, 220, 220));
+
+        // Se añaden funcionalidades a la JTextArea
+        jtaAreaPrestamos.setEditable(false);
+        jtaAreaPrestamos.setWrapStyleWord(true);
+        jtaAreaPrestamos.setLineWrap(true);
+        jtaAreaPrestamos.setBackground(new Color(255, 255, 230)); // Se añade color.
 
 
         jspTablaCategoria.setViewportView(tblCategoria);
@@ -425,6 +426,7 @@ public class Bibliotecario extends JFrame {
         btnLimpiarPrestamos.addActionListener(event -> {limpiarPrestamo();});
         btnListarPrestamos.addActionListener(event -> {listarPrestamos();});
         btnFiltrarPrestamos.addActionListener(event -> {filtrarPrestamo();});
+        btnEjecutarPrestamo.addActionListener(event -> {ejecutarLosHilos();});
 
 
         // Se añade color a las JTables
@@ -465,6 +467,25 @@ public class Bibliotecario extends JFrame {
 
     }
     // Acá termina el constructor
+
+
+    /**
+     * Método para limpiar la JTextArea
+     */
+    public void limpiarJTextArea() {jtaAreaPrestamos.setText("");}
+
+    /**
+     * Método que se utiliza para agregar mensajes a la JtextArea
+     * @param mensaje cadena de texto que se quiere mostrar en la JTextArea.
+     */
+    private void agregarMensaje(String mensaje)
+    {
+        SwingUtilities.invokeLater(() -> {
+            jtaAreaPrestamos.append(mensaje + "\n");
+            // Scroll automático al final
+            jtaAreaPrestamos.setCaretPosition(jtaAreaPrestamos.getDocument().getLength());
+        });
+    }
 
     /**
      * Método para crear una Tabla "categoría" con sus respectivos campos
@@ -1853,8 +1874,53 @@ public class Bibliotecario extends JFrame {
                     return;
                 }
 
-                cargarTablaPrestamosFiltradaLista(lista);   // ahora recibe una lista
+                cargarTablaPrestamosFiltradaLista(lista);
             }
+    }
+
+    private void ejecutarLosHilos()
+    {
+        String nombreBibliotecario1 = "Cristian";
+        String nombreBibliotecario2 = "Enrique";
+
+        String idHilosTxt = txtTramitarPorId.getText().trim();
+        if (idHilosTxt.isEmpty())
+        {
+            JOptionPane.showMessageDialog(this, "Debes ingresar un valor en el campo de texto");
+        }
+
+        int idPrestamo;
+        try
+        {
+            idPrestamo = Integer.parseInt(idHilosTxt);
+        }
+        catch (NumberFormatException e)
+        {
+            JOptionPane.showMessageDialog(this, "No se pudo obtener el ID. Inténtelo de nuevo");
+            return;
+        }
+        int idEstudianteDevuelto;
+        int idLibroDevuelto;
+        try
+        {
+
+            Prestamos p = controladorPrestamo.buscarPrestamoPorId(idPrestamo);
+            if (p == null)
+            {
+                JOptionPane.showMessageDialog(this, "El préstamo no existe");
+                return;
+            }
+            idEstudianteDevuelto = p.getId_estudiante();
+            idLibroDevuelto = p.getId_libro();
+        }
+        catch (NumberFormatException e)
+        {
+            JOptionPane.showMessageDialog(this, "El ID ingresado no fue encontrado en la BD");
+            return;
+        }
+
+        modelo.Bibliotecario bibliotecario = controladorBibliotecario.crearBibliotecario(nombreBibliotecario1, idEstudianteDevuelto, idLibroDevuelto );
+
     }
 }
 
