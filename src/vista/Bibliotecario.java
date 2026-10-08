@@ -11,8 +11,13 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 public class Bibliotecario extends JFrame {
@@ -411,6 +416,16 @@ public class Bibliotecario extends JFrame {
             filtrarEstudiante();
         });
 
+        btnAgregarPrestamos.addActionListener(event -> {
+            agregarPrestamo();
+        });
+
+        btnEditarPrestamos.addActionListener(event -> {editarPrestamo();});
+        btnEliminarPrestamo.addActionListener(event -> {eliminarPrestamo();});
+        btnLimpiarPrestamos.addActionListener(event -> {limpiarPrestamo();});
+        btnListarPrestamos.addActionListener(event -> {listarPrestamos();});
+        btnFiltrarPrestamos.addActionListener(event -> {filtrarPrestamo();});
+
 
         // Se añade color a las JTables
         tblLibros.setBackground(new Color(255, 245, 230));
@@ -684,6 +699,47 @@ public class Bibliotecario extends JFrame {
         modeloTablaPrestamos.setRowCount(0); // limpia la tabla
 
         for (Prestamos p : controladorPrestamo.obtenerTodosLosPrestamos())
+        {
+            modeloTablaPrestamos.addRow(new Object[]{
+                    p.getId(),
+                    p.getId_estudiante(),
+                    p.getId_libro(),
+                    p.getFecha_prestamo(),
+                    p.getFecha_devolucion(),
+                    p.isDevuelto()
+            });
+        }
+    }
+
+    /**
+     * Método que carga una tabla filtrada por las especificaciones del usuario
+     *
+     * @param prestamos objeto préstamos que se pasa como parámetro para filtrar la búsqueda.
+     */
+    private void cargarTablaPrestamosFiltrada(Prestamos prestamos)
+    {
+        modeloTablaPrestamos.setRowCount(0); // limpia la tabla
+
+        List<Prestamos> listaFiltradaID = new ArrayList<Prestamos>();
+        listaFiltradaID.add(prestamos);
+
+        for (Prestamos p : listaFiltradaID) {
+            modeloTablaPrestamos.addRow(new Object[]{
+                    p.getId(),
+                    p.getId_estudiante(),
+                    p.getId_libro(),
+                    p.getFecha_prestamo(),
+                    p.getFecha_devolucion(),
+                    p.isDevuelto()
+            });
+        }
+    }
+
+    private void cargarTablaPrestamosFiltradaLista(List<Prestamos> lista)
+    {
+        modeloTablaPrestamos.setRowCount(0); // limpia la tabla
+
+        for (Prestamos p : lista)
         {
             modeloTablaPrestamos.addRow(new Object[]{
                     p.getId(),
@@ -1427,6 +1483,378 @@ public class Bibliotecario extends JFrame {
                 JOptionPane.showMessageDialog(this, "El estudiante ingresado no existe. Intente por ID o con otro nombre de autor");
             }
         }
+    }
+
+    // ===================== AGREGAR PRÉSTAMO =====================
+    private void agregarPrestamo() {
+
+        String idEstudianteTxt = txtIdEstudiantePrestamo.getText().toLowerCase().trim();
+        String idLibroTxt = txtIdLibroPrestamo.getText().toLowerCase().trim();
+        String fechaPrestamoTxt = txtFechaPrestamo.getText().toLowerCase().trim();
+        String fechaDevolucionTxt = txtFechaDevolucionPrestamo.getText().toLowerCase().trim();
+        String devueltoTxt = jcbDevuelto.getSelectedItem().toString();
+
+        if (idEstudianteTxt.isEmpty() || idLibroTxt.isEmpty() || fechaPrestamoTxt.isEmpty() || fechaDevolucionTxt.isEmpty() || devueltoTxt.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Debe llenar todos los campos para ingresar un préstamo");
+            return;
+        }
+
+        int idEstudiante;
+        try
+        {
+            idEstudiante = Integer.parseInt(idEstudianteTxt);
+            if (idEstudiante < 1)
+            {
+                    JOptionPane.showMessageDialog(this, "Error al asignar el ID. Ingrese un valor '1' o más alto");
+                    return;
+            }
+        }
+        catch (NumberFormatException e)
+        {
+            JOptionPane.showMessageDialog(this, "Debe agregar un número entero para agregar", "número entero desconocido", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        int idLibro;
+        try
+        {
+            idLibro = Integer.parseInt(idLibroTxt);
+            if (idLibro < 1)
+            {
+                JOptionPane.showMessageDialog(this, "Error al asignar el ID. Ingrese un valor '1' o más alto");
+                return;
+            }
+        }
+        catch (NumberFormatException e)
+        {
+            JOptionPane.showMessageDialog(this, "Debe agregar un número entero para agregar", "número entero desconocido", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        Date fechaPrestamo;
+        try
+        {
+            fechaPrestamo = java.sql.Date.valueOf(fechaPrestamoTxt);
+        }
+        catch (DateTimeParseException e)
+        {
+            JOptionPane.showMessageDialog(this, "La fecha no se puedo convertir como se esperaba. Intente de nuevo");
+            return;
+        }
+        catch (IllegalArgumentException e)
+        {
+            JOptionPane.showMessageDialog(this, "El formato de fecha es incorrecto. Debe ser: YYYY-MM-DD");
+            return;
+        }
+
+        Date fechaDevolucion;
+        try
+        {
+            fechaDevolucion = java.sql.Date.valueOf(fechaDevolucionTxt);
+        }
+        catch (DateTimeParseException e)
+        {
+            JOptionPane.showMessageDialog(this, "La fecha no se puedo convertir como se esperaba. Intente de nuevo");
+            return;
+        }
+        catch (IllegalArgumentException e)
+        {
+            JOptionPane.showMessageDialog(this, "El formato de fecha es incorrecto. Debe ser: YYYY-MM-DD");
+            return;
+        }
+        boolean devuelto;
+        try
+        {
+            devuelto = Boolean.parseBoolean(devueltoTxt);
+        }
+        catch (IllegalArgumentException e)
+        {
+            JOptionPane.showMessageDialog(this, "No se puedo realizar la conversión booleana. Revise el valor ingresado");
+            return;
+        }
+
+        Prestamos p = new Prestamos();
+        p.setId_estudiante(idEstudiante);
+        p.setId_libro(idLibro);
+        p.setFecha_prestamo((java.sql.Date) fechaPrestamo);
+        p.setFecha_devolucion((java.sql.Date) fechaDevolucion);
+        p.setDevuelto(devuelto);
+
+        if (controladorPrestamo.insertarPrestamo(p))
+        {
+            JOptionPane.showMessageDialog(this, "Préstamo agregado correctamente");
+            cargarTablaPrestamos();
+        }
+        else
+        {
+            JOptionPane.showMessageDialog(this, "Error al agregar el préstamo");
+        }
+    }
+
+    // ===================== EDITAR PRÉSTAMO =====================
+    private void editarPrestamo()
+    {
+        if (idPrestamoSeleccionado == -1)
+        {
+            JOptionPane.showMessageDialog(this, "Seleccione un préstamo para editar");
+            return;
+        }
+        String idEstudianteTxt = txtIdEstudiantePrestamo.getText().toLowerCase().trim();
+        String idLibroTxt = txtIdLibroPrestamo.getText().toLowerCase().trim();
+        String fechaPrestamoTxt = txtFechaPrestamo.getText().toLowerCase().trim();
+        String fechaDevolucionTxt = txtFechaDevolucionPrestamo.getText().toLowerCase().trim();
+        String devueltoTxt = jcbDevuelto.getSelectedItem().toString();
+
+        if (idEstudianteTxt.isEmpty() || idLibroTxt.isEmpty() || fechaPrestamoTxt.isEmpty() || fechaDevolucionTxt.isEmpty() || devueltoTxt.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Debe llenar todos los campos para ingresar un préstamo");
+            return;
+        }
+
+        int idEstudiante;
+        try
+        {
+            idEstudiante = Integer.parseInt(idEstudianteTxt);
+            if (idEstudiante < 1)
+            {
+                JOptionPane.showMessageDialog(this, "Error al asignar el ID. Ingrese un valor '1' o más alto");
+                return;
+            }
+        }
+        catch (NumberFormatException e)
+        {
+            JOptionPane.showMessageDialog(this, "Debe agregar un número entero para agregar", "número entero desconocido", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        int idLibro;
+        try
+        {
+            idLibro = Integer.parseInt(idLibroTxt);
+            if (idLibro < 1)
+            {
+                JOptionPane.showMessageDialog(this, "Error al asignar el ID. Ingrese un valor '1' o más alto");
+                return;
+            }
+        }
+        catch (NumberFormatException e)
+        {
+            JOptionPane.showMessageDialog(this, "Debe agregar un número entero para agregar", "número entero desconocido", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        Date fechaPrestamo;
+        try
+        {
+            fechaPrestamo = java.sql.Date.valueOf(fechaPrestamoTxt);
+        }
+        catch (DateTimeParseException e)
+        {
+            JOptionPane.showMessageDialog(this, "La fecha no se puedo convertir como se esperaba. Intente de nuevo");
+            return;
+        }
+        catch (IllegalArgumentException e)
+        {
+            JOptionPane.showMessageDialog(this, "El formato de fecha es incorrecto. Debe ser: YYYY-MM-DD");
+            return;
+        }
+
+        Date fechaDevolucion;
+        try
+        {
+            fechaDevolucion = java.sql.Date.valueOf(fechaDevolucionTxt);
+        }
+        catch (DateTimeParseException e)
+        {
+            JOptionPane.showMessageDialog(this, "La fecha no se puedo convertir como se esperaba. Intente de nuevo");
+            return;
+        }
+        catch (IllegalArgumentException e)
+        {
+            JOptionPane.showMessageDialog(this, "El formato de fecha es incorrecto. Debe ser: YYYY-MM-DD");
+            return;
+        }
+
+        boolean devuelto;
+        try
+        {
+            devuelto = Boolean.parseBoolean(devueltoTxt);
+        }
+        catch (IllegalArgumentException e)
+        {
+            JOptionPane.showMessageDialog(this, "No se puedo realizar la conversión booleana. Revise el valor ingresado");
+            return;
+        }
+
+        Prestamos p = new Prestamos();
+        p.setId_estudiante(idEstudiante);
+        p.setId_libro(idLibro);
+        p.setFecha_prestamo((java.sql.Date) fechaPrestamo);
+        p.setFecha_devolucion((java.sql.Date) fechaDevolucion);
+        p.setDevuelto(devuelto);
+
+        if (controladorPrestamo.editarPrestamo(p))
+        {
+            JOptionPane.showMessageDialog(this, "Préstamo editado correctamente");
+            cargarTablaPrestamos();
+        }
+        else
+        {
+            JOptionPane.showMessageDialog(this, "Error al editar el préstamo");
+        }
+    }
+
+    // ===================== ELIMINAR PRÉSTAMO =====================
+    private void eliminarPrestamo()
+    {
+        // Si no se ha seleccionado nada, lanza este mensaje emergente
+        if (idPrestamoSeleccionado == -1)
+        {
+            JOptionPane.showMessageDialog(this, "Seleccione un préstamo para eliminar");
+            return;
+        }
+
+        // Intenta esto:
+        try {
+            // Lanza cuadro emergente con opción si/no seleccionable para confirmar eliminación del préstamo.
+            int opcion = JOptionPane.showConfirmDialog(this,
+                    "¿Está seguro que desea eliminar este préstamo?",
+                    "Confirmar eliminación",
+                    JOptionPane.YES_NO_OPTION);
+
+            // Si la opción es NO, regresa a la pantalla principal
+            if (opcion != JOptionPane.YES_OPTION)
+            {
+                return;
+            }
+            // Si la opción es SI, llama al controlador de préstamos y elimina la fila marcada
+            boolean eliminado = controladorPrestamo.eliminarPrestamo(idPrestamoSeleccionado);
+            cargarTablaPrestamos();
+
+            // Si se confirma eliminación, lanza este cuadro emergente:
+            if (eliminado)
+            {
+                JOptionPane.showMessageDialog(null,
+                        "Préstamo eliminado correctamente",
+                        "Éxito",
+                        JOptionPane.INFORMATION_MESSAGE);
+                cargarTablaEstudiantes();
+            }
+            // En caso contrario, lanza el cuadro emergente con la mala noticia.
+            else
+            {
+                JOptionPane.showMessageDialog(null,
+                        "No se pudo eliminar el préstamo",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        // Lanza este "CATCH" si no se puedo eliminar por restricción de integridad:
+        catch (RuntimeException ex)
+        {
+            if (ex.getMessage().equals("FK_ERROR"))
+            {
+                JOptionPane.showMessageDialog(null,
+                        "No se puede eliminar este préstamo porque tiene restricciones de integridad asociadas",
+                        "Restricción de integridad",
+                        JOptionPane.WARNING_MESSAGE);
+            }
+        }
+    }
+    // ===================== LIMPIAR PRÉSTAMO =====================
+    private void limpiarPrestamo()
+    {
+        txtIdEstudiantePrestamo.setText("");
+        txtIdLibroPrestamo.setText("");
+        txtFechaPrestamo.setText("");
+        txtFechaDevolucionPrestamo.setText("");
+        jcbDevuelto.setSelectedIndex(-1);
+
+        tblPrestamos.clearSelection();
+        idPrestamoSeleccionado = -1;
+        modeloTablaPrestamos.setRowCount(0);
+    }
+
+    // ===================== LISTAR TODOS LOS PRESTAMOS =====================
+    private void listarPrestamos()
+    {
+        List<Prestamos> todosLosPrestamos = controladorPrestamo.obtenerTodosLosPrestamos();
+        if (todosLosPrestamos.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "No se encontraron préstamos almacenadas en la BD");
+            return;
+        }
+        cargarTablaPrestamos();
+    }
+
+    // ===================== FILTRAR PRÉSTAMO POR ID O CONDICIÓN (DEVUELTO) =====================
+    private void filtrarPrestamo()
+    {
+        String filtroSeleccionado = jcbFiltrarPrestamos.getSelectedItem().toString();
+
+        if (filtroSeleccionado.isEmpty() || filtroSeleccionado == null)
+        {
+            JOptionPane.showMessageDialog(this, "Debes ingresar un valor en la pestaña para filtrar");
+            return;
+        }
+
+        String textoFiltro = txtFiltroPrestamos.getText().trim();
+
+        if (textoFiltro.isEmpty())
+        {
+            JOptionPane.showMessageDialog(this, "Debes ingresar un valor para filtrar");
+            return;
+        }
+        // Dependiendo de la selección del usuario, se filtra la tabla por "id" o condición de devolución.
+        if (filtroSeleccionado.equals("ID"))
+        {
+            try {
+                Prestamos p = new Prestamos();
+                int idPrestamo = Integer.parseInt(textoFiltro);
+                p = controladorPrestamo.buscarPrestamoPorId(idPrestamo);
+                if (p == null)
+                {
+                    JOptionPane.showMessageDialog(this, "No existe un préstamo bajo esos términos");
+                    return;
+                }
+                cargarTablaPrestamosFiltrada(p);
+            }
+            catch (NumberFormatException e)
+            {
+                JOptionPane.showMessageDialog(this, "El valor ingresado no es un número entero. Ingrese un número mayor a '1'");
+                return;
+            }
+            catch (NullPointerException e)
+            {
+                JOptionPane.showMessageDialog(this, "El valor ingresado no existe en la BD. Intente con otro");
+                return;
+            }
+        }
+
+        if (filtroSeleccionado.equals("Devuelto"))
+        {
+            boolean devuelto;
+            if (textoFiltro.equalsIgnoreCase("true") || textoFiltro.equalsIgnoreCase("sí") || textoFiltro.equalsIgnoreCase("si"))
+            {
+                devuelto = true;
+            }
+            else if (textoFiltro.equalsIgnoreCase("false") || textoFiltro.equalsIgnoreCase("no"))
+            {
+                devuelto = false;
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(this, "Ingrese 'true', 'false', 'sí' o 'no'");
+                return;
+            }
+
+                List<Prestamos> lista = controladorPrestamo.buscarPrestamoPorBoolean(devuelto);
+
+                if (lista.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "No se encontraron préstamos con ese estado");
+                    return;
+                }
+
+                cargarTablaPrestamosFiltradaLista(lista);   // ahora recibe una lista
+            }
     }
 }
 

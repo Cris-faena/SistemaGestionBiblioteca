@@ -44,7 +44,7 @@ public interface PrestamoDAO
      * @param devuelto categoría que se requiere buscar.
      * @return un Objeto tipo Préstamo que coincide con el boolean ingresado
      */
-    public Prestamos buscarPorDevuelto(Boolean devuelto);
+    public List<Prestamos> buscarPorDevuelto(boolean devuelto);
 
     // ===================== LISTAR TODOS LOS PRÉSTAMOS =====================
     /**

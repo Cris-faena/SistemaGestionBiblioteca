@@ -21,7 +21,7 @@ public class ControladorPrestamo
 
     // ===================== BUSCAR PRÉSTAMO POR ID O BOOLEAN =====================
     public Prestamos buscarPrestamoPorId(int idPrestamo) {return prestamoDAO.buscarPorId(idPrestamo);}
-    public Prestamos buscarPrestamoPorBoolean(boolean devuelto) {return prestamoDAO.buscarPorDevuelto(devuelto);}
+    public List<Prestamos> buscarPrestamoPorBoolean(boolean devuelto) {return prestamoDAO.buscarPorDevuelto(devuelto);}
 
     // ===================== LISTAR TODOS LOS PRÉSTAMOS =====================
     public List<Prestamos> obtenerTodosLosPrestamos() {return prestamoDAO.listarTodos();}

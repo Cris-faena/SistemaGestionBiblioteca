@@ -139,8 +139,9 @@ public class PrestamoDAOImpl implements PrestamoDAO
      * @param devuelto categoría que se requiere buscar.
      * @return un Objeto tipo Préstamo que coincide con el boolean ingresado
      */
-    public Prestamos buscarPorDevuelto(Boolean devuelto)
+    public List<Prestamos> buscarPorDevuelto(boolean devuelto)
     {
+        List<Prestamos> lista = new ArrayList<>();
         // Almacena esta consulta SQL en un String, en donde se busquen todos las categorías de la tabla categorías, en donde el nombre sea el parámetro ingresado
         String sql = "SELECT * FROM prestamos WHERE devuelto= ?";
         // Intenta conectar a la base de datos y almacena la consulta SQL en un objeto "ps" pre-compilado
@@ -151,23 +152,23 @@ public class PrestamoDAOImpl implements PrestamoDAO
             // Ejecuta la consulta SQL en la base de datos
             ResultSet rs = ps.executeQuery();
 
-            if (rs.next())
+            while (rs.next())
             {
-                return new Prestamos(
+                lista.add(new Prestamos(
                         rs.getInt("id"),
                         rs.getInt("id_estudiante"),
                         rs.getInt("id_libro"),
                         rs.getDate("fecha_prestamo"),
                         rs.getDate("fecha_devolucion"),
                         rs.getBoolean("devuelto")
-                );
+                ));
             }
         }
         catch (SQLException e)
         {
-            System.out.println("Error al buscar el préstamo: " + e.getMessage());
+            System.out.println("Error al buscar el préstamo por estado de devolución: " + e.getMessage());
         }
-        return null;
+        return lista;
     }
 
     // ===================== LISTAR TODOS LOS PRÉSTAMOS =====================
