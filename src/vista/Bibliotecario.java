@@ -1,6 +1,7 @@
 package vista;
 
 import controlador.ControladorCategoria;
+import controlador.ControladorEstudiante;
 import controlador.ControladorLibros;
 import modelo.*;
 
@@ -13,8 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Bibliotecario extends JFrame
-{
+public class Bibliotecario extends JFrame {
     private JPanel PanelPrincipalBiblio;
     private JLabel lblCategorias;
     private JTextField txtTituloLibros;
@@ -61,18 +61,46 @@ public class Bibliotecario extends JFrame
     private JPanel PanelBotonesLibros;
     private JPanel PanelFiltrosLibro;
     private JPanel PanelTextosLibros;
+    private JPanel PanelTextosCategoria;
+    private JPanel PanelFiltrosCategoria;
+    private JPanel PanelBotonMostrarCategoria;
+    private JPanel PanelEstudianteTextos;
+    private JPanel lblNombreEstudiante;
+    private JTextField txtNombreEstudiante;
+    private JLabel lblRutEstudiante;
+    private JTextField txtRutEstudiante;
+    private JLabel lblCursoEstudiante;
+    private JTextField txtCursoEstudiante;
+    private JLabel lblCorreoEstudiante;
+    private JPanel PanelBotonesEstudiante;
+    private JButton btnAgregarEstudiante;
+    private JButton btnEditarEstudiante;
+    private JButton btnEliminarEstudiante;
+    private JButton btnLimpiarEstudiante;
+    private JPanel PanelFiltrosEstudiante;
+    private JComboBox jcbEstudiante;
+    private JTextField txtEstudiantejcb;
+    private JButton btnFiltrarEstudiante;
+    private JButton btnListarEstudiante;
+    private JLabel lblEstudiante;
+    private JTextField txtCorreo;
+    private JTable tblEstudiante;
+    private JScrollPane jspEstudiante;
+    private JPanel PaneltxtEstudiantes;
 
     private int idCategoriaSeleccionado = -1;
     private int idLibroSeleccionado = -1;
+    private int idEstudianteSeleccionado = -1;
 
     private DefaultTableModel modeloTablaCategoria;
     private DefaultTableModel modeloTablaLibros;
+    private DefaultTableModel modeloTablaEstudiante;
 
     private final ControladorCategoria controladorCategoria = new ControladorCategoria();
     private final ControladorLibros controladorLibros = new ControladorLibros();
+    private final ControladorEstudiante controladorEstudiante = new ControladorEstudiante();
 
-    public Bibliotecario()
-    {
+    public Bibliotecario() {
         setTitle("Bibliotecario");
         setContentPane(PanelPrincipalBiblio);
         setSize(430, 220);
@@ -86,9 +114,17 @@ public class Bibliotecario extends JFrame
         PanelSubCategorias.setBackground(new Color(250, 240, 230));
         PanelSubLibros.setBackground(new Color(250, 240, 230));
 
-        PanelBotonesLibros.setBackground(new Color(173, 216, 230));
+        PanelBotonesLibros.setBackground(new Color(250, 240, 230));
         PanelTextosLibros.setBackground(new Color(250, 240, 230));
-        PanelFiltrosLibro.setBackground(new Color(250, 240, 230));
+        PanelFiltrosLibro.setBackground(new Color(173, 216, 230));
+
+        PanelTextosCategoria.setBackground(new Color(250, 240, 230));
+        PanelBotonMostrarCategoria.setBackground(new Color(250, 240, 230));
+        PanelFiltrosCategoria.setBackground(new Color(173, 216, 230));
+
+        PaneltxtEstudiantes.setBackground(new Color(250, 240, 230));
+        PanelBotonesEstudiante.setBackground(new Color(250, 240, 230));
+        PanelFiltrosEstudiante.setBackground(new Color(173, 216, 230));
 
 
         jspTablaCategoria.setViewportView(tblCategoria);
@@ -131,6 +167,34 @@ public class Bibliotecario extends JFrame
         txtFiltrarLibros.setMinimumSize(new Dimension(170, 30));
         txtFiltrarLibros.setPreferredSize(new Dimension(170, 30));
 
+        txtCategoriaSub.setMaximumSize(new Dimension(170, 30));
+        txtCategoriaSub.setMinimumSize(new Dimension(170, 30));
+        txtCategoriaSub.setPreferredSize(new Dimension(170, 30));
+
+        txtFiltrarCat.setMaximumSize(new Dimension(170, 30));
+        txtFiltrarCat.setMinimumSize(new Dimension(170, 30));
+        txtFiltrarCat.setPreferredSize(new Dimension(170, 30));
+
+        txtNombreEstudiante.setMaximumSize(new Dimension(170, 30));
+        txtNombreEstudiante.setMinimumSize(new Dimension(170, 30));
+        txtNombreEstudiante.setPreferredSize(new Dimension(170, 30));
+
+        txtRutEstudiante.setMaximumSize(new Dimension(170, 30));
+        txtRutEstudiante.setMinimumSize(new Dimension(170, 30));
+        txtRutEstudiante.setPreferredSize(new Dimension(170, 30));
+
+        txtCursoEstudiante.setMaximumSize(new Dimension(100, 30));
+        txtCursoEstudiante.setMinimumSize(new Dimension(100, 30));
+        txtCursoEstudiante.setPreferredSize(new Dimension(100, 30));
+
+        txtCorreo.setMaximumSize(new Dimension(170, 30));
+        txtCorreo.setMinimumSize(new Dimension(170, 30));
+        txtCorreo.setPreferredSize(new Dimension(170, 30));
+
+        txtEstudiantejcb.setMaximumSize(new Dimension(170, 30));
+        txtEstudiantejcb.setMinimumSize(new Dimension(170, 30));
+        txtEstudiantejcb.setPreferredSize(new Dimension(170, 30));
+
         // Se edita el tamaño de los botones
         btnAgregarLibros.setMaximumSize(new Dimension(100, 30));
         btnAgregarLibros.setMinimumSize(new Dimension(100, 30));
@@ -145,22 +209,63 @@ public class Bibliotecario extends JFrame
         btnLimpiarLibros.setMinimumSize(new Dimension(100, 30));
         btnLimpiarLibros.setPreferredSize(new Dimension(100, 30));
 
+        btnAgregarEstudiante.setMaximumSize(new Dimension(100, 30));
+        btnAgregarEstudiante.setMinimumSize(new Dimension(100, 30));
+        btnAgregarEstudiante.setPreferredSize(new Dimension(100, 30));
+        btnEditarEstudiante.setMaximumSize(new Dimension(100, 30));
+        btnEditarEstudiante.setMinimumSize(new Dimension(100, 30));
+        btnEditarEstudiante.setPreferredSize(new Dimension(100, 30));
+        btnEliminarEstudiante.setMaximumSize(new Dimension(100, 30));
+        btnEliminarEstudiante.setPreferredSize(new Dimension(100, 30));
+        btnEliminarEstudiante.setMinimumSize(new Dimension(100, 30));
+        btnLimpiarEstudiante.setMaximumSize(new Dimension(100, 30));
+        btnLimpiarEstudiante.setPreferredSize(new Dimension(100, 30));
+        btnLimpiarEstudiante.setMinimumSize(new Dimension(100, 30));
+        btnFiltrarEstudiante.setMaximumSize(new Dimension(100, 30));
+        btnFiltrarEstudiante.setMinimumSize(new Dimension(100, 30));
+        btnFiltrarEstudiante.setPreferredSize(new Dimension(100, 30));
+        btnListarEstudiante.setMaximumSize(new Dimension(100, 30));
+        btnListarEstudiante.setMinimumSize(new Dimension(100, 30));
+        btnListarEstudiante.setPreferredSize(new Dimension(100, 30));
+
         // Se edita el tamaño de los JComboBox
         jcbLibros.setMaximumSize(new Dimension(100, 30));
         jcbLibros.setMinimumSize(new Dimension(100, 30));
         jcbLibros.setPreferredSize(new Dimension(100, 30));
+
+        jcbCategorias.setMaximumSize(new Dimension(100, 30));
+        jcbCategorias.setMinimumSize(new Dimension(100, 30));
+        jcbCategorias.setPreferredSize(new Dimension(100, 30));
+
+        jcbEstudiante.setMaximumSize(new Dimension(100, 30));
+        jcbEstudiante.setMinimumSize(new Dimension(100, 30));
+        jcbEstudiante.setPreferredSize(new Dimension(100, 30));
+
         // Se agrega funcionalidades a los botones del panel de ingreso de categorías
-        btnAgregarCategoria.addActionListener(event -> {agregarCategoria();});
-        btnEditarCategoria.addActionListener(event -> {editarCategoria();});
-        btnEliminarCategoria.addActionListener(event -> {eliminarCategoria();});
-        btnLimpiarCategoria.addActionListener(event -> {limpiarCategoria();});
-        btnListarCategorias.addActionListener(event -> {listarCategoria();});
-        btnFiltrarCategoria.addActionListener(event -> {filtrarCategoria();});
-        btnMostrarCategorias.addActionListener(event -> {String lista = String.join("\n",
-                Arrays.stream(CategoriaLibros.values())
-                        .map(Enum::name)
-                        .toArray(String[]::new)
-        );
+        btnAgregarCategoria.addActionListener(event -> {
+            agregarCategoria();
+        });
+        btnEditarCategoria.addActionListener(event -> {
+            editarCategoria();
+        });
+        btnEliminarCategoria.addActionListener(event -> {
+            eliminarCategoria();
+        });
+        btnLimpiarCategoria.addActionListener(event -> {
+            limpiarCategoria();
+        });
+        btnListarCategorias.addActionListener(event -> {
+            listarCategoria();
+        });
+        btnFiltrarCategoria.addActionListener(event -> {
+            filtrarCategoria();
+        });
+        btnMostrarCategorias.addActionListener(event -> {
+            String lista = String.join("\n",
+                    Arrays.stream(CategoriaLibros.values())
+                            .map(Enum::name)
+                            .toArray(String[]::new)
+            );
 
             // Mostrar cuadro emergente con la lista
             JOptionPane.showMessageDialog(
@@ -172,33 +277,79 @@ public class Bibliotecario extends JFrame
         });
 
         // Se agregan funcionalidades a los botones del panel de registro de libros
-        btnAgregarLibros.addActionListener(event -> {agregarLibro();});
-        btnEditarLibros.addActionListener(event -> {editarLibro();});
-        btnEliminarLibros.addActionListener(event -> {eliminarLibro();});
-        btnLimpiarLibros.addActionListener(event -> {limpiarLibro();});
-        btnListarLibros.addActionListener(event -> {listarLibro();});
-        btnFiltrarLibro.addActionListener(event -> {filtrarLibros();});
+        btnAgregarLibros.addActionListener(event -> {
+            agregarLibro();
+        });
+        btnEditarLibros.addActionListener(event -> {
+            editarLibro();
+        });
+        btnEliminarLibros.addActionListener(event -> {
+            eliminarLibro();
+        });
+        btnLimpiarLibros.addActionListener(event -> {
+            limpiarLibro();
+        });
+        btnListarLibros.addActionListener(event -> {
+            listarLibro();
+        });
+        btnFiltrarLibro.addActionListener(event -> {
+            filtrarLibros();
+        });
 
+        btnAgregarEstudiante.addActionListener(event -> {
+            agregarEstudiante();
+        });
+
+        btnEditarEstudiante.addActionListener(event -> {
+            editarEstudiante();
+        });
+        btnEliminarEstudiante.addActionListener(event -> {
+            eliminarEstudiante();
+        });
+        btnLimpiarEstudiante.addActionListener(event -> {
+            limpiarEstudiante();
+        });
+
+        btnListarEstudiante.addActionListener(event -> {
+            listarEstudiante();
+        });
+
+        btnFiltrarEstudiante.addActionListener(event -> {
+            filtrarEstudiante();
+        });
+
+
+        // Se añade color a las JTables
         tblLibros.setBackground(new Color(255, 245, 230));
         tblLibros.getTableHeader().setBackground(new Color(240, 220, 200));
         tblLibros.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
         tblLibros.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         tblLibros.setRowHeight(22);
 
+        tblCategoria.setBackground(new Color(255, 245, 230));
+        tblCategoria.getTableHeader().setBackground(new Color(240, 220, 200));
+        tblCategoria.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
+        tblCategoria.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        tblCategoria.setRowHeight(22);
+
+        tblEstudiante.setBackground(new Color(255, 245, 230));
+        tblEstudiante.getTableHeader().setBackground(new Color(240, 220, 200));
+        tblEstudiante.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
+        tblEstudiante.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        tblEstudiante.setRowHeight(22);
+
         // Se cargan los JComboBox del panel
         cargarCategoriasJComboBoxCategoria();
         cargarCategoriasJComboBoxLibros();
+        cargarCategoriasJComboBoxEstudiante();
         // Se inicializan las tablas del panel
         inicializarTablaCategorias();
         inicializarTablaLibros();
+        inicializarTablaEstudiantes();
         // Se cargan las tablas de la BD.
         cargarTablaCategoria();
         cargarTablaLibros();
-
-        /*PestañaPanelAdmin.add(PanelSubCategorias);
-        PestañaPanelAdmin.add(PanelSubLibros);
-        PestañaPanelAdmin.add(jspTablaCategoria);
-        PestañaPanelAdmin.add(jspSubLibros);*/
+        cargarTablaEstudiantes();
 
     }
     // Acá termina el constructor
@@ -206,14 +357,11 @@ public class Bibliotecario extends JFrame
     /**
      * Método para crear una Tabla "categoría" con sus respectivos campos
      */
-    private void inicializarTablaCategorias()
-    {
+    private void inicializarTablaCategorias() {
         String[] columnas = {"ID_categoría", "Nombre_categoria"};
-        modeloTablaCategoria = new DefaultTableModel(columnas, 0)
-        {
+        modeloTablaCategoria = new DefaultTableModel(columnas, 0) {
             @Override
-            public boolean isCellEditable(int row, int column)
-            {
+            public boolean isCellEditable(int row, int column) {
                 return false;
             }
         };
@@ -223,10 +371,8 @@ public class Bibliotecario extends JFrame
 
         tblCategoria.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-        tblCategoria.addMouseListener(new MouseAdapter()
-        {
-            public void mouseClicked(MouseEvent e)
-            {
+        tblCategoria.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
                 int fila = tblCategoria.getSelectedRow();
                 if (fila >= 0) {
                     idCategoriaSeleccionado = Integer.parseInt(modeloTablaCategoria.getValueAt(fila, 0).toString());
@@ -239,12 +385,10 @@ public class Bibliotecario extends JFrame
     /**
      * Método que carga la tabla categoría de la base de datos.
      */
-    private void cargarTablaCategoria()
-    {
+    private void cargarTablaCategoria() {
         modeloTablaCategoria.setRowCount(0); // limpia la tabla
 
-        for (Categoria c : controladorCategoria.obtenerCategorias())
-        {
+        for (Categoria c : controladorCategoria.obtenerCategorias()) {
             modeloTablaCategoria.addRow(new Object[]{
                     c.getId(),
                     c.getNombre(),
@@ -255,17 +399,16 @@ public class Bibliotecario extends JFrame
 
     /**
      * Método que carga una tabla filtrada por loas especificaciones del usuario
+     *
      * @param categoria objeto Categoría que se pasa como parámetro para filtrar la búsqueda.
      */
-    private void cargarTablaCategoriaFiltrada(Categoria categoria)
-    {
+    private void cargarTablaCategoriaFiltrada(Categoria categoria) {
         modeloTablaCategoria.setRowCount(0); // limpia la tabla
 
         List<Categoria> listaFiltradaID = new ArrayList<Categoria>();
         listaFiltradaID.add(categoria);
 
-        for (Categoria c : listaFiltradaID)
-        {
+        for (Categoria c : listaFiltradaID) {
             modeloTablaCategoria.addRow(new Object[]{
                     c.getId(),
                     c.getNombre()
@@ -273,14 +416,11 @@ public class Bibliotecario extends JFrame
         }
     }
 
-    private void inicializarTablaLibros()
-    {
+    private void inicializarTablaLibros() {
         String[] columnas = {"ID_libro", "Título_libro", "Autor_libro", "ISBN_libro", "Editorial_libro", "Stock_libro", "ID_categoria"};
-        modeloTablaLibros = new DefaultTableModel(columnas, 0)
-        {
+        modeloTablaLibros = new DefaultTableModel(columnas, 0) {
             @Override
-            public boolean isCellEditable(int row, int column)
-            {
+            public boolean isCellEditable(int row, int column) {
                 return false;
             }
         };
@@ -302,10 +442,8 @@ public class Bibliotecario extends JFrame
 
         tblLibros.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-        tblLibros.addMouseListener(new MouseAdapter()
-        {
-            public void mouseClicked(MouseEvent e)
-            {
+        tblLibros.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
                 int fila = tblLibros.getSelectedRow();
                 if (fila >= 0) {
 
@@ -322,12 +460,10 @@ public class Bibliotecario extends JFrame
         });
     }
 
-    private void cargarTablaLibros()
-    {
+    private void cargarTablaLibros() {
         modeloTablaLibros.setRowCount(0); // limpia la tabla
 
-        for (Libros l : controladorLibros.obtenerTodosLibros())
-        {
+        for (Libros l : controladorLibros.obtenerTodosLibros()) {
             modeloTablaLibros.addRow(new Object[]{
                     l.getId(),
                     l.getTitulo(),
@@ -340,15 +476,13 @@ public class Bibliotecario extends JFrame
         }
     }
 
-    private void cargarTablaLibrosFiltrada(Libros libros)
-    {
+    private void cargarTablaLibrosFiltrada(Libros libros) {
         modeloTablaLibros.setRowCount(0); // limpia la tabla
 
         List<Libros> listaFiltradaID = new ArrayList<Libros>();
         listaFiltradaID.add(libros);
 
-        for (Libros l : listaFiltradaID)
-        {
+        for (Libros l : listaFiltradaID) {
             modeloTablaLibros.addRow(new Object[]{
                     l.getId(),
                     l.getTitulo(),
@@ -357,6 +491,65 @@ public class Bibliotecario extends JFrame
                     l.getEditorial(),
                     l.getStock(),
                     l.getId_categoria()
+            });
+        }
+    }
+
+    private void inicializarTablaEstudiantes() {
+        String[] columnas = {"ID_estudiante", "Nombre_estudiante", "Rut_estudiante", "Curso_estudiante", "Correo_estudiante"};
+        modeloTablaEstudiante = new DefaultTableModel(columnas, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        tblEstudiante.setModel(modeloTablaEstudiante);
+        tblEstudiante.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+
+        tblEstudiante.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        tblEstudiante.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                int fila = tblEstudiante.getSelectedRow();
+                if (fila >= 0) {
+                    idEstudianteSeleccionado = Integer.parseInt(modeloTablaEstudiante.getValueAt(fila, 0).toString());
+                    txtNombreEstudiante.setText(modeloTablaEstudiante.getValueAt(fila, 1).toString());
+                    txtRutEstudiante.setText(modeloTablaEstudiante.getValueAt(fila, 2).toString());
+                    txtCursoEstudiante.setText(modeloTablaEstudiante.getValueAt(fila, 3).toString());
+                    txtCorreo.setText(modeloTablaEstudiante.getValueAt(fila, 4).toString());
+                }
+            }
+        });
+    }
+
+    private void cargarTablaEstudiantes() {
+        modeloTablaEstudiante.setRowCount(0); // limpia la tabla
+
+        for (Estudiante e : controladorEstudiante.obtenerTodosEstudiantes()) {
+            modeloTablaEstudiante.addRow(new Object[]{
+                    e.getId(),
+                    e.getNombre(),
+                    e.getRut(),
+                    e.getCurso(),
+                    e.getCorreo(),
+            });
+        }
+    }
+
+    private void cargarTablaEstudiantesFiltrada(Estudiante estudiante)
+    {
+        modeloTablaEstudiante.setRowCount(0); // limpia la tabla
+
+        List<Estudiante> listaFiltradaID = new ArrayList<Estudiante>();
+        listaFiltradaID.add(estudiante);
+
+        for (Estudiante e : listaFiltradaID) {
+            modeloTablaEstudiante.addRow(new Object[]{
+                    e.getId(),
+                    e.getNombre(),
+                    e.getRut(),
+                    e.getCurso(),
+                    e.getCorreo()
             });
         }
     }
@@ -364,8 +557,7 @@ public class Bibliotecario extends JFrame
     /**
      * Método que carga los valores iniciales del JComboBOx del Panel "categorías"
      */
-    private void cargarCategoriasJComboBoxCategoria()
-    {
+    private void cargarCategoriasJComboBoxCategoria() {
         jcbCategorias.removeAllItems();
         jcbCategorias.addItem("ID");
         jcbCategorias.addItem("Nombre");
@@ -374,35 +566,39 @@ public class Bibliotecario extends JFrame
     /**
      * Método que carga los valores iniciales del JComboBOx del Panel "libros"
      */
-    private void cargarCategoriasJComboBoxLibros()
-    {
+    private void cargarCategoriasJComboBoxLibros() {
         jcbLibros.removeAllItems();
         jcbLibros.addItem("ID");
         jcbLibros.addItem("Autor");
     }
 
+    /**
+     * Método que carga los valores iniciales del JComboBOx del Panel "Estudiantes"
+     */
+    private void cargarCategoriasJComboBoxEstudiante() {
+        jcbEstudiante.removeAllItems();
+        jcbEstudiante.addItem("ID");
+        jcbEstudiante.addItem("Nombre");
+    }
+
     // ===================== AGREGAR CATEGORÍA =====================
+
     /**
      * Método que agrega una nueva categoría a la BD
      */
-    private void agregarCategoria()
-    {
-        String categoriaStr =  txtCategoriaSub.getText().toUpperCase();
+    private void agregarCategoria() {
+        String categoriaStr = txtCategoriaSub.getText().toUpperCase();
 
-        if (categoriaStr.isEmpty() || categoriaStr.equals(""))
-        {
+        if (categoriaStr.isEmpty() || categoriaStr.equals("")) {
             JOptionPane.showMessageDialog(null, "Debe ingresar una categoria");
             return;
         }
 
         CategoriaLibros categoria;
 
-        try
-        {
+        try {
             categoria = CategoriaLibros.valueOf(categoriaStr);
-        }
-        catch (IllegalArgumentException e)
-        {
+        } catch (IllegalArgumentException e) {
             JOptionPane.showMessageDialog(null, "Esa categoría no existe. Intente nuevamente");
             return;
         }
@@ -411,27 +607,23 @@ public class Bibliotecario extends JFrame
         c.setNombre(categoria);
 
         // Llama al método que crea o inserta un usuario nuevo en la base de datos.
-        if (controladorCategoria.crearCategoria(c))
-        {
+        if (controladorCategoria.crearCategoria(c)) {
             cargarTablaCategoria();
             JOptionPane.showMessageDialog(this, "Categoría agregada correctamente");
             cargarTablaCategoria();
-        }
-        else
-        {
+        } else {
             JOptionPane.showMessageDialog(this, "Error al agregar la categoría");
         }
     }
     // ===================== EDITAR CATEGORÍA =====================
+
     /**
      * Método que permite editar una categoría.
      * Por motivos que utiliza valores inmutables, no se permitirá editarlos
      * Se implementó sólo por fines académicos.
      */
-    private void editarCategoria()
-    {
-        if (idCategoriaSeleccionado <= 0)
-        {
+    private void editarCategoria() {
+        if (idCategoriaSeleccionado <= 0) {
             JOptionPane.showMessageDialog(null,
                     "Esta categoría es INMUTABLE. Pruebe agregar o eliminar",
                     "Error",
@@ -439,26 +631,21 @@ public class Bibliotecario extends JFrame
             return;
         }
 
-        if (idCategoriaSeleccionado == -1)
-        {
+        if (idCategoriaSeleccionado == -1) {
             JOptionPane.showMessageDialog(this, "Seleccione una categoria para editar");
             return;
         }
 
         String nombreTxt = txtCategoriaSub.getText().toUpperCase();
 
-        if (nombreTxt.isEmpty())
-        {
+        if (nombreTxt.isEmpty()) {
             JOptionPane.showMessageDialog(this, "El nombre de la categoría no puede estar vacío");
         }
 
         CategoriaLibros categoria;
-        try
-        {
+        try {
             categoria = CategoriaLibros.valueOf(nombreTxt);
-        }
-        catch (IllegalArgumentException e)
-        {
+        } catch (IllegalArgumentException e) {
             JOptionPane.showMessageDialog(null, "Esa categoría no existe. Intente nuevamente");
             return;
         }
@@ -467,13 +654,10 @@ public class Bibliotecario extends JFrame
         c.setId(idCategoriaSeleccionado);
         c.setNombre(categoria);
 
-        if (controladorCategoria.editarCategoria(c))
-        {
+        if (controladorCategoria.editarCategoria(c)) {
             JOptionPane.showMessageDialog(this, "Categoría editada correctamente");
             cargarTablaCategoria();
-        }
-        else
-        {
+        } else {
             JOptionPane.showMessageDialog(this, "Error al editar la categoría");
         }
     }
@@ -483,11 +667,9 @@ public class Bibliotecario extends JFrame
     /**
      * Método que permite eliminar la categoría seleccionada.
      */
-    private void eliminarCategoria()
-    {
+    private void eliminarCategoria() {
         // Si no se ha seleccionado nada, lanza este mensaje emergente
-        if (idCategoriaSeleccionado == -1)
-        {
+        if (idCategoriaSeleccionado == -1) {
             JOptionPane.showMessageDialog(this, "Seleccione una categoría para eliminar");
             return;
         }
@@ -508,16 +690,14 @@ public class Bibliotecario extends JFrame
             boolean eliminado = controladorCategoria.eliminarCategoria(idCategoriaSeleccionado);
 
             // Si se confirma eliminación, lanza este cuadro emergente:
-            if (eliminado)
-            {
+            if (eliminado) {
                 JOptionPane.showMessageDialog(null,
                         "Categoría eliminada correctamente",
                         "Éxito",
                         JOptionPane.INFORMATION_MESSAGE);
             }
             // En caso contrario, lanza el cuadro emergente con la mala noticia.
-            else
-            {
+            else {
                 JOptionPane.showMessageDialog(null,
                         "No se pudo eliminar la categoría",
                         "Error",
@@ -525,10 +705,8 @@ public class Bibliotecario extends JFrame
             }
         }
         // Lanza este "CATCH" si no se puedo eliminar por restricción de integridad:
-        catch (RuntimeException ex)
-        {
-            if (ex.getMessage().equals("FK_ERROR"))
-            {
+        catch (RuntimeException ex) {
+            if (ex.getMessage().equals("FK_ERROR")) {
                 JOptionPane.showMessageDialog(null,
                         "No se puede eliminar esta categoría porque tiene libros asociados.\n" +
                                 "Debe eliminar o reasignar los libros primero.",
@@ -542,8 +720,7 @@ public class Bibliotecario extends JFrame
     /**
      * Método que permite limpiar todos los campos de la tabla categorías.
      */
-    private void limpiarCategoria()
-    {
+    private void limpiarCategoria() {
         txtCategoriaSub.setText("");
         tblCategoria.clearSelection();
         idCategoriaSeleccionado = -1;
@@ -555,57 +732,43 @@ public class Bibliotecario extends JFrame
     /**
      * Método que filtra la tabla categoría por ID o Nombre
      */
-    private void filtrarCategoria()
-    {
+    private void filtrarCategoria() {
         String categoriaSeleccionada = jcbCategorias.getSelectedItem().toString();
-        if (categoriaSeleccionada.isEmpty() || categoriaSeleccionada == null)
-        {
+        if (categoriaSeleccionada.isEmpty() || categoriaSeleccionada == null) {
             JOptionPane.showMessageDialog(this, "Debes ingresar un valor en la pestaña para filtrar");
             return;
         }
         // Dependiendo de la selección del usuario, se filtra la tabla por id o categoría
 
-            if (categoriaSeleccionada.equals("ID"))
-            {
-                try
-                {
-                    Categoria c = new Categoria();
-                    int idCategoria = Integer.parseInt(txtFiltrarCat.getText());
-                    c =  controladorCategoria.buscarPorId(idCategoria);
-                    cargarTablaCategoriaFiltrada(c);
-                }
-                catch (NumberFormatException e)
-                {
-                    JOptionPane.showMessageDialog(this, "El valor ingresado no es válido. Intente ingresar un número entero");
-                    return;
-                }
-                catch (NullPointerException e)
-                {
-                    JOptionPane.showMessageDialog(this, "El valor ingresado no existe en la BD. Intente con otro");
-                    return;
-                }
+        if (categoriaSeleccionada.equals("ID")) {
+            try {
+                Categoria c = new Categoria();
+                int idCategoria = Integer.parseInt(txtFiltrarCat.getText());
+                c = controladorCategoria.buscarPorId(idCategoria);
+                cargarTablaCategoriaFiltrada(c);
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "El valor ingresado no es válido. Intente ingresar un número entero");
+                return;
+            } catch (NullPointerException e) {
+                JOptionPane.showMessageDialog(this, "El valor ingresado no existe en la BD. Intente con otro");
+                return;
             }
+        }
 
-            if (categoriaSeleccionada.equals("Nombre"))
-            {
-                try
-                {
-                    Categoria c = new Categoria();
-                    String nombre = txtFiltrarCat.getText().toUpperCase();
-                    c = controladorCategoria.buscarPorCategoria(nombre);
-                    cargarTablaCategoriaFiltrada(c);
-                }
-                catch (IllegalArgumentException e)
-                {
-                    JOptionPane.showMessageDialog(this, "Los valores ingresados no son válidos. Inténtelo nuevamente");
-                    return;
-                }
-                catch (NullPointerException e)
-                {
-                    JOptionPane.showMessageDialog(this, "El nombre ingresado no existe. Presione 'categorias' para obtener valores aceptados");
-                    return;
-                }
+        if (categoriaSeleccionada.equals("Nombre")) {
+            try {
+                Categoria c = new Categoria();
+                String nombre = txtFiltrarCat.getText().toUpperCase();
+                c = controladorCategoria.buscarPorCategoria(nombre);
+                cargarTablaCategoriaFiltrada(c);
+            } catch (IllegalArgumentException e) {
+                JOptionPane.showMessageDialog(this, "Los valores ingresados no son válidos. Inténtelo nuevamente");
+                return;
+            } catch (NullPointerException e) {
+                JOptionPane.showMessageDialog(this, "El nombre ingresado no existe. Presione 'categorias' para obtener valores aceptados");
+                return;
             }
+        }
     }
 
     // ===================== LISTAR CATEGORÍA =====================
@@ -613,11 +776,9 @@ public class Bibliotecario extends JFrame
     /**
      * Método que carga una tabla actualizada con todas las categorías
      */
-    private void listarCategoria()
-    {
+    private void listarCategoria() {
         List<Categoria> todasLasCategorias = controladorCategoria.obtenerCategorias();
-        if (todasLasCategorias.isEmpty())
-        {
+        if (todasLasCategorias.isEmpty()) {
             JOptionPane.showMessageDialog(this, "No se encontraron categorías almacenadas en la BD");
             return;
         }
@@ -632,8 +793,7 @@ public class Bibliotecario extends JFrame
      * Método que permite agregar un libro a la BD.
      * Recuerda: el ISBN es de tipo "UNIQUE" no se puede repetir o lanza error.
      */
-    private void agregarLibro()
-    {
+    private void agregarLibro() {
         // Se capturan los valores
         String titulo = txtTituloLibros.getText().toLowerCase().trim();
         String autor = txtAutor.getText().toLowerCase().trim();
@@ -658,8 +818,7 @@ public class Bibliotecario extends JFrame
             return;
         }
 
-        if (controladorLibros.comprobarISBNLibro(isbn))
-        {
+        if (controladorLibros.comprobarISBNLibro(isbn)) {
             JOptionPane.showMessageDialog(this,
                     "El ISBN '" + isbn + "' ya existe.\nPor favor ingresa otro ISBN.",
                     "ISBN duplicado",
@@ -667,8 +826,7 @@ public class Bibliotecario extends JFrame
             return;
         }
 
-        if (editorial.isEmpty() || editorial == null)
-        {
+        if (editorial.isEmpty() || editorial == null) {
             JOptionPane.showMessageDialog(this, "Debe agregar una editorial para agregar");
             return;
         }
@@ -705,14 +863,11 @@ public class Bibliotecario extends JFrame
 
         // Llama al método que crea o inserta un libro nuevo en la base de datos.
 
-        if (controladorLibros.insertarLibro(l))
-        {
+        if (controladorLibros.insertarLibro(l)) {
             cargarTablaLibros();
             JOptionPane.showMessageDialog(this, "Libro agregado correctamente");
             cargarTablaCategoria();
-        }
-        else
-        {
+        } else {
             JOptionPane.showMessageDialog(this, "Error al agregar el libro");
         }
     }
@@ -722,10 +877,8 @@ public class Bibliotecario extends JFrame
     /**
      * Método que permite editar un libro que ya fue ingresado a la BD
      */
-    private void editarLibro()
-    {
-        if (idLibroSeleccionado == -1)
-        {
+    private void editarLibro() {
+        if (idLibroSeleccionado == -1) {
             JOptionPane.showMessageDialog(this, "Seleccione un libro para editar");
             return;
         }
@@ -737,8 +890,7 @@ public class Bibliotecario extends JFrame
         int stock;
         int idCategoria;
 
-        if (titulo.isEmpty() || titulo == null)
-        {
+        if (titulo.isEmpty() || titulo == null) {
             JOptionPane.showMessageDialog(this, "El nombre del libro no puede estar vacío");
         }
 
@@ -752,8 +904,7 @@ public class Bibliotecario extends JFrame
             return;
         }
 
-        if (editorial.isEmpty() || editorial == null)
-        {
+        if (editorial.isEmpty() || editorial == null) {
             JOptionPane.showMessageDialog(this, "Debe agregar una editorial para agregar");
             return;
         }
@@ -789,13 +940,10 @@ public class Bibliotecario extends JFrame
         l.setStock(stock);
         l.setId_categoria(idCategoria);
 
-        if (controladorLibros.editarLibro(l))
-        {
+        if (controladorLibros.editarLibro(l)) {
             JOptionPane.showMessageDialog(this, "libro editado correctamente");
             cargarTablaLibros();
-        }
-        else
-        {
+        } else {
             JOptionPane.showMessageDialog(this, "Error al editar el libro");
         }
     }
@@ -806,11 +954,9 @@ public class Bibliotecario extends JFrame
      * Método para eliminar un libro de la base de datos.
      * Debe seleccionar una fila de la tabla para eliminarla.
      */
-    private void eliminarLibro()
-    {
+    private void eliminarLibro() {
         // Si no se ha seleccionado nada, lanza este mensaje emergente
-        if (idLibroSeleccionado == -1)
-        {
+        if (idLibroSeleccionado == -1) {
             JOptionPane.showMessageDialog(this, "Seleccione un libro para eliminar");
             return;
         }
@@ -831,8 +977,7 @@ public class Bibliotecario extends JFrame
             boolean eliminado = controladorLibros.eliminarLibro(idLibroSeleccionado);
 
             // Si se confirma eliminación, lanza este cuadro emergente:
-            if (eliminado)
-            {
+            if (eliminado) {
                 JOptionPane.showMessageDialog(null,
                         "libro eliminado correctamente",
                         "Éxito",
@@ -840,8 +985,7 @@ public class Bibliotecario extends JFrame
                 cargarTablaLibros();
             }
             // En caso contrario, lanza el cuadro emergente con la mala noticia.
-            else
-            {
+            else {
                 JOptionPane.showMessageDialog(null,
                         "No se pudo eliminar el libro",
                         "Error",
@@ -849,10 +993,8 @@ public class Bibliotecario extends JFrame
             }
         }
         // Lanza este "CATCH" si no se puedo eliminar por restricción de integridad:
-        catch (RuntimeException ex)
-        {
-            if (ex.getMessage().equals("FK_ERROR"))
-            {
+        catch (RuntimeException ex) {
+            if (ex.getMessage().equals("FK_ERROR")) {
                 JOptionPane.showMessageDialog(null,
                         "No se puede eliminar esta libro porque tiene relaciones de integridad asociadas.",
                         "Restricción de integridad",
@@ -867,8 +1009,7 @@ public class Bibliotecario extends JFrame
      * Método que limpia los campos de texto y esconde la tabla de libros.
      * No elimina la tabla, sólo la oculta.
      */
-    private void limpiarLibro()
-    {
+    private void limpiarLibro() {
         txtTituloLibros.setText("");
         txtAutor.setText("");
         txtIsbn.setText("");
@@ -886,11 +1027,9 @@ public class Bibliotecario extends JFrame
     /**
      * Método que carga la tabla de libros con todos los registros de la BD
      */
-    private void listarLibro()
-    {
+    private void listarLibro() {
         List<Libros> todosLosLibros = controladorLibros.obtenerTodosLibros();
-        if (todosLosLibros.isEmpty())
-        {
+        if (todosLosLibros.isEmpty()) {
             JOptionPane.showMessageDialog(this, "No se encontraron libros almacenadas en la BD");
             return;
         }
@@ -899,24 +1038,200 @@ public class Bibliotecario extends JFrame
 
     // ===================== FILTRAR LIBROS POR ID O AUTOR =====================
 
-    private void filtrarLibros()
-    {
+    private void filtrarLibros() {
         String filtroSeleccionado = jcbLibros.getSelectedItem().toString();
-        if (filtroSeleccionado.isEmpty() || filtroSeleccionado == null)
-        {
+        if (filtroSeleccionado.isEmpty() || filtroSeleccionado == null) {
             JOptionPane.showMessageDialog(this, "Debes ingresar un valor en la pestaña para filtrar");
             return;
         }
 
         // Dependiendo de la selección del usuario, se filtra la tabla por "id" o autor.
-        if (filtroSeleccionado.equals("ID"))
-        {
-            try
-            {
+        if (filtroSeleccionado.equals("ID")) {
+            try {
                 Libros l = new Libros();
                 int idLibro = Integer.parseInt(txtFiltrarLibros.getText());
-                l =  controladorLibros.buscarLibroPorId(idLibro);
+                l = controladorLibros.buscarLibroPorId(idLibro);
                 cargarTablaLibrosFiltrada(l);
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "El valor ingresado no es válido. Intente ingresar un número entero");
+                return;
+            } catch (NullPointerException e) {
+                JOptionPane.showMessageDialog(this, "El valor ingresado no existe en la BD. Intente con otro");
+                return;
+            }
+        }
+
+        if (filtroSeleccionado.equals("Autor")) {
+            try {
+                Libros l = new Libros();
+                String autor = txtFiltrarLibros.getText().toLowerCase().trim();
+                l = controladorLibros.buscarLibroPorAutor(autor);
+                cargarTablaLibrosFiltrada(l);
+            } catch (IllegalArgumentException e) {
+                JOptionPane.showMessageDialog(this, "Los valores ingresados no son válidos. Inténtelo nuevamente");
+            } catch (NullPointerException e) {
+                JOptionPane.showMessageDialog(this, "El autor ingresado no existe. Intente por ID o con otro nombre de autor");
+            }
+        }
+    }
+
+    // ===================== AGREGAR ESTUDIANTE =====================
+    private void agregarEstudiante() {
+        String nombre = txtNombreEstudiante.getText().toLowerCase().trim();
+        String rut = txtRutEstudiante.getText().toLowerCase().trim();
+        String curso = txtCursoEstudiante.getText().toLowerCase().trim();
+        String correo = txtCorreo.getText().toLowerCase().trim();
+
+        if (nombre.isEmpty() || rut.isEmpty() || curso.isEmpty() || correo.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Debe llenar todos los campos para ingresar un estudiante");
+            return;
+        }
+
+        Estudiante e = new Estudiante();
+        e.setNombre(nombre);
+        e.setRut(rut);
+        e.setCurso(curso);
+        e.setCorreo(correo);
+
+        if (controladorEstudiante.insertarEstudiante(e)) {
+            JOptionPane.showMessageDialog(this, "Estudiante insertado correctamente");
+            cargarTablaEstudiantes();
+        }
+        else
+        {
+            JOptionPane.showMessageDialog(this, "no se pudo agregar el estudiante");
+        }
+    }
+
+    // ===================== EDITAR ESTUDIANTE =====================
+    private void editarEstudiante() {
+        if (idEstudianteSeleccionado == -1) {
+            JOptionPane.showMessageDialog(this, "Seleccione un estudiante para editar");
+            return;
+        }
+        String nombre = txtNombreEstudiante.getText().toLowerCase().trim();
+        String rut = txtRutEstudiante.getText().toLowerCase().trim();
+        String curso = txtCursoEstudiante.getText().toLowerCase().trim();
+        String correo = txtCorreo.getText().toLowerCase().trim();
+
+        if (nombre.isEmpty() || rut.isEmpty() || curso.isEmpty() || correo.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Debe llenar todos los campos para ingresar un estudiante");
+            return;
+        }
+
+        Estudiante e = new Estudiante();
+        e.setId(idEstudianteSeleccionado);
+        e.setNombre(nombre);
+        e.setRut(rut);
+        e.setCurso(curso);
+        e.setCorreo(correo);
+
+        if (controladorEstudiante.editarEstudiante(e)) {
+            JOptionPane.showMessageDialog(this, "Estudiante editado correctamente");
+            cargarTablaEstudiantes();
+        } else {
+            JOptionPane.showMessageDialog(this, "Error al editar el Estudiante");
+        }
+    }
+
+    // ===================== ELIMINAR ESTUDIANTE =====================
+    private void eliminarEstudiante() {
+        // Si no se ha seleccionado nada, lanza este mensaje emergente
+        if (idEstudianteSeleccionado == -1) {
+            JOptionPane.showMessageDialog(this, "Seleccione una estudiante para eliminar");
+            return;
+        }
+
+        // Intenta esto:
+        try {
+            // Lanza cuadro emergente con opción si/no seleccionable para confirmar eliminación del estudiante.
+            int opcion = JOptionPane.showConfirmDialog(this,
+                    "¿Está seguro que desea eliminar este estudiante?",
+                    "Confirmar eliminación",
+                    JOptionPane.YES_NO_OPTION);
+
+            // Si la opción es NO, regresa a la pantalla principal
+            if (opcion != JOptionPane.YES_OPTION)
+            {
+                return;
+            }
+            // Si la opción es SI, llama al controlador de estudiantes y elimina la fila marcada
+            boolean eliminado = controladorEstudiante.eliminarEstudiante(idEstudianteSeleccionado);
+
+            // Si se confirma eliminación, lanza este cuadro emergente:
+            if (eliminado)
+            {
+                JOptionPane.showMessageDialog(null,
+                        "Estudiante eliminado correctamente",
+                        "Éxito",
+                        JOptionPane.INFORMATION_MESSAGE);
+                cargarTablaEstudiantes();
+            }
+            // En caso contrario, lanza el cuadro emergente con la mala noticia.
+            else
+            {
+                JOptionPane.showMessageDialog(null,
+                        "No se pudo eliminar el estudiante",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        // Lanza este "CATCH" si no se puedo eliminar por restricción de integridad:
+        catch (RuntimeException ex)
+        {
+            if (ex.getMessage().equals("FK_ERROR"))
+            {
+                JOptionPane.showMessageDialog(null,
+                        "No se puede eliminar esta categoría porque tiene libros asociados.\n" +
+                                "Debe eliminar o reasignar los libros primero.",
+                        "Restricción de integridad",
+                        JOptionPane.WARNING_MESSAGE);
+            }
+        }
+    }
+
+    // ===================== LIMPIAR ESTUDIANTE =====================
+    private void limpiarEstudiante()
+    {
+        txtNombreEstudiante.setText("");
+        txtRutEstudiante.setText("");
+        txtCursoEstudiante.setText("");
+        txtCorreo.setText("");
+
+        tblEstudiante.clearSelection();
+        idEstudianteSeleccionado = -1;
+        modeloTablaEstudiante.setRowCount(0);
+    }
+
+    // ===================== LISTAR TODOS LOS ESTUDIANTE =====================
+    private void listarEstudiante()
+    {
+        List<Estudiante> todosLosEstudiantes = controladorEstudiante.obtenerTodosEstudiantes();
+        if (todosLosEstudiantes.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "No se encontraron estudiantes almacenadas en la BD");
+            return;
+        }
+        cargarTablaEstudiantes();
+    }
+
+    // ===================== FILTRAR ESTUDIANTE POR NOMBRE O ID =====================
+    private void filtrarEstudiante()
+    {
+        String filtroSeleccionado = jcbEstudiante.getSelectedItem().toString();
+
+        if (filtroSeleccionado.isEmpty() || filtroSeleccionado == null) {
+            JOptionPane.showMessageDialog(this, "Debes ingresar un valor en la pestaña para filtrar");
+            return;
+        }
+
+        // Dependiendo de la selección del usuario, se filtra la tabla por "id" o nombre.
+        if (filtroSeleccionado.equals("ID"))
+        {
+            try {
+                Estudiante e = new Estudiante();
+                int idEstudiante = Integer.parseInt(txtEstudiantejcb.getText());
+                e = controladorEstudiante.buscarEstudiantePorId(idEstudiante);
+                cargarTablaEstudiantesFiltrada(e);
             }
             catch (NumberFormatException e)
             {
@@ -930,14 +1245,14 @@ public class Bibliotecario extends JFrame
             }
         }
 
-        if (filtroSeleccionado.equals("Autor"))
+        if (filtroSeleccionado.equals("Nombre"))
         {
             try
             {
-                Libros l = new Libros();
-                String autor = txtFiltrarLibros.getText().toLowerCase().trim();
-                l = controladorLibros.buscarLibroPorAutor(autor);
-                cargarTablaLibrosFiltrada(l);
+                Estudiante e = new Estudiante();
+                String nombre = txtEstudiantejcb.getText().toLowerCase().trim();
+                e = controladorEstudiante.buscarEstudiantePorNombre(nombre);
+                cargarTablaEstudiantesFiltrada(e);
             }
             catch (IllegalArgumentException e)
             {
@@ -945,7 +1260,7 @@ public class Bibliotecario extends JFrame
             }
             catch (NullPointerException e)
             {
-                JOptionPane.showMessageDialog(this, "El autor ingresado no existe. Intente por ID o con otro nombre de autor");
+                JOptionPane.showMessageDialog(this, "El estudiante ingresado no existe. Intente por ID o con otro nombre de autor");
             }
         }
     }

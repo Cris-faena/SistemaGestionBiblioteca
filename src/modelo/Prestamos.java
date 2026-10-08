@@ -1,6 +1,7 @@
 package modelo;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 /**
  * Clase que representa una lista con los préstamos de los libros de la biblioteca.
@@ -10,15 +11,15 @@ public class Prestamos
     private int id;                        // Atributo que representa el identificador único del préstamo.
     private int id_estudiante;              // Atributo que representa el id_estudiante que solicitó el préstamo.
     private int id_libro;                   // Atributo que representa el id_libro que se entregó como préstamo.
-    private LocalDate fecha_prestamo;       // Atributo que representa la fecha de préstamo del libro.
-    private LocalDate fecha_devolucion;     // Atributo que representa la fecha de devolución del libro en calidad de préstamo.
+    private Date fecha_prestamo;       // Atributo que representa la fecha de préstamo del libro.
+    private Date fecha_devolucion;     // Atributo que representa la fecha de devolución del libro en calidad de préstamo.
     private boolean devuelto;               // Atributo que representa si el libro fue devuelto o no.
 
     // Constructor sin parámetros
     public Prestamos() {}
 
     // Constructor con parámetros
-    public Prestamos(int id, int id_estudiante, int id_libro, LocalDate fecha_prestamo, LocalDate fecha_devolucion, boolean devuelto)
+    public Prestamos(int id, int id_estudiante, int id_libro, Date fecha_prestamo, Date fecha_devolucion, boolean devuelto)
     {
         this.id = id;
         this.id_estudiante = id_estudiante;
@@ -52,13 +53,13 @@ public class Prestamos
      * Método que retorna el valor de la variable "fecha_prestamo".
      * @return "fecha_préstamo" del préstamo.
      */
-    public LocalDate getFecha_prestamo() {return fecha_prestamo;}
+    public Date getFecha_prestamo() {return fecha_prestamo;}
 
     /**
      * Método que retorna el valor de la variable "fecha_devolución".
      * @return "fecha_devolución" del préstamo.
      */
-    public LocalDate getFecha_devolucion() {return fecha_devolucion;}
+    public Date getFecha_devolucion() {return fecha_devolucion;}
 
     /**
      * Método que retorna el valor de la variable "devuelto".
@@ -90,13 +91,13 @@ public class Prestamos
      * Método que modifica el valor de la variable "fecha_prestamo".
      * @param fecha_prestamo nueva fecha_préstamo que se requiere asignar al objeto
      */
-    public void setFecha_prestamo(LocalDate fecha_prestamo) {this.fecha_prestamo = fecha_prestamo;}
+    public void setFecha_prestamo(Date fecha_prestamo) {this.fecha_prestamo = fecha_prestamo;}
 
     /**
      * Método que modifica el valor de la variable "fecha_devolucion".
      * @param fecha_devolucion nueva fecha_devolución que se requiere asignar al objeto.
      */
-    public void setFecha_devolucion(LocalDate fecha_devolucion) {this.fecha_devolucion = fecha_devolucion;}
+    public void setFecha_devolucion(Date fecha_devolucion) {this.fecha_devolucion = fecha_devolucion;}
 
     /**
      * Método que modifica el valor de la variable "devuelto".

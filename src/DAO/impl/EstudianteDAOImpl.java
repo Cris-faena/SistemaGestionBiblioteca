@@ -18,13 +18,16 @@ public class EstudianteDAOImpl implements EstudianteDAO
     public boolean insertar(Estudiante estudiante)
     {
         String sql = """
-                INSERT INTO estudiante (nombre)
-                VALUES (?)
+                INSERT INTO estudiantes (nombre, rut, curso, correo)
+                VALUES (?,?,?,?)
         """;
         try (Connection conn = ConexionBD.getInstancia().obtenerConexion();
              PreparedStatement ps = conn.prepareStatement(sql))
         {
             ps.setString(1, estudiante.getNombre());
+            ps.setString(2, estudiante.getRut());
+            ps.setString(3, estudiante.getCurso());
+            ps.setString(4, estudiante.getCorreo());
             return ps.executeUpdate() > 0;
         }
         catch (SQLException e)

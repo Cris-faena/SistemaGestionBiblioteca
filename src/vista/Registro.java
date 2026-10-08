@@ -77,7 +77,7 @@ public class Registro extends JFrame
         String correo = txtCorreoRegistro.getText().toLowerCase().trim();
         String contraseña = txtContraseñaRegistro.getText().toLowerCase().trim();
         String repitaContra = txtRepitaRegistro.getText().toLowerCase().trim();
-        String rolTxt = txtRolRegistro.getText().toUpperCase().trim();
+        String rolTxt = txtRolRegistro.getText().trim();
 
         // Se implementa un manejo de excepciones para cada campo.
         if (nombre.isEmpty() || nombre == null)

@@ -1,6 +1,7 @@
 package vista;
 
 import controlador.AuthController;
+import modelo.TipoUsuario;
 import modelo.Usuario;
 
 import javax.swing.*;
@@ -102,17 +103,30 @@ public class Login extends JFrame
                 JOptionPane.showMessageDialog(this, "Credenciales inválidas o usuario inactivo");
                 return;
             }
-            if (u.getRol().equals("ESTUDIANTE"))
+            String rol = u.getRol().name();
+            if ("ESTUDIANTE".equals(rol))
             {
-                new Escolar().setVisible(true);
-                dispose();
+                Escolar escolar = new Escolar();
+                escolar.setVisible(true);
+                this.dispose();
+
+            }
+            else if ("BIBLIOTECARIO".equals(rol))
+            {
+                Bibliotecario bibliotecario = new Bibliotecario();
+                bibliotecario.setVisible(true);
+                this.dispose();
+
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(this, "Rol no reconocido: " + rol);
             }
 
         }
         catch (SQLException ex)
         {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            return;
         }
     }
 
