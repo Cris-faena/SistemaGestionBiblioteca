@@ -2,6 +2,7 @@ package DAO;
 
 import modelo.Prestamos;
 
+import javax.swing.table.DefaultTableModel;
 import java.util.List;
 
 public interface PrestamoDAO
@@ -52,4 +53,10 @@ public interface PrestamoDAO
      * @return una lista de objetos Préstamo previamente almacenada.
      */
     public List<Prestamos> listarTodos();
+
+    public boolean consultarEstudiantePrestamo(DefaultTableModel modelo);
+
+    public boolean consultarPrestamoEspecifico(DefaultTableModel modelo, int idEstudiante);
+
+
 }

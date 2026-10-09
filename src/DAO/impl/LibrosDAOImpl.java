@@ -3,6 +3,8 @@ package DAO.impl;
 import DAO.LibrosDAO;
 import modelo.Libros;
 import util.ConexionBD;
+
+import javax.swing.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -179,6 +181,43 @@ public class LibrosDAOImpl implements LibrosDAO
         return null;
     }
 
+    /**
+     * Método que permitirá buscar un libro en la base de datos.
+     * @param tituloLibro parámetro que se requiere buscar.
+     * @return un Objeto tipo "Libro" que coincide con el string ingresado
+     */
+    public Libros buscarPorTitulo(String tituloLibro)
+    {
+        // Almacena esta consulta SQL en un String, en donde se busquen todos los autores de la tabla libros, en donde el autor sea el parámetro ingresado
+        String sql = "SELECT * FROM libros WHERE titulo = ?";
+        // Intenta conectar a la base de datos y almacena la consulta SQL en un objeto "ps" pre-compilado
+        try (Connection conn = ConexionBD.getInstancia().obtenerConexion();
+             PreparedStatement ps = conn.prepareStatement(sql))
+        {
+            ps.setString(1, tituloLibro);
+            // Ejecuta la consulta SQL en la base de datos
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next())
+            {
+                return new Libros(
+                        rs.getInt("id"),
+                        rs.getString("titulo"),
+                        rs.getString("autor"),
+                        rs.getString("isbn"),
+                        rs.getString("editorial"),
+                        rs.getInt("stock"),
+                        rs.getInt("id_categoria")
+                );
+            }
+        }
+        catch (SQLException e)
+        {
+            System.out.println("Error al buscar el libro: " + e.getMessage());
+        }
+        return null;
+    }
+
     // ===================== LISTAR TODOS =====================
     /**
      * Método que permitirá devolver una lista de libros de la base de datos.
@@ -239,6 +278,60 @@ public class LibrosDAOImpl implements LibrosDAO
         catch (SQLException e)
         {
             System.out.println("Error al verificar el libro: " + e.getMessage());
+        }
+        return false;
+    }
+
+    /**
+     * Método que permite disminuir el stock de un libro en específico
+     * @param idLibro "id del libro que se quiere modificar el stock
+     * Solo puede acceder a él un bibliotecario
+     */
+    public synchronized boolean retirarLibro(int idLibro)
+    {
+        String sql = "UPDATE libros SET stock = stock - 1 WHERE id= ? AND stock > 0";
+
+        try (Connection conn = ConexionBD.getInstancia().obtenerConexion();
+             PreparedStatement ps = conn.prepareStatement(sql))
+        {
+            ps.setInt(1, idLibro);
+
+            int filasAfectadas = ps.executeUpdate();
+            return filasAfectadas > 0;
+        }
+        catch (SQLException e)
+        {
+            System.out.println("Error al disminuir el stock de libros: " + e.getMessage());
+        }
+        return false;
+    }
+
+    public boolean cargarConsultaLibros(JTextArea textArea)
+    {
+        String sql = "SELECT id,titulo, autor, editorial, stock FROM libros ORDER BY titulo ASC";
+
+        try (Connection conn = ConexionBD.getInstancia().obtenerConexion();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery())
+        {
+            StringBuilder sb  = new StringBuilder();
+            while (rs.next())
+            {
+                sb.append("\n---------------- LIBROS ---------------------\n");
+                sb.append("ID: ").append(rs.getInt("id")).append("\n");
+                sb.append("Título: ").append(rs.getString("titulo")).append("\n");
+                sb.append("Autor: ").append(rs.getString("autor")).append("\n");
+                sb.append("Editorial: ").append(rs.getString("editorial")).append("\n");
+                sb.append("Stock: ").append(rs.getInt("stock")).append("\n");
+                sb.append("-------------------------------------------------------------\n");
+            }
+            textArea.setText(sb.toString());
+            return true;
+        }
+        catch (SQLException e)
+        {
+            System.out.println("Error al cargar los libros: " + e.getMessage());
+            textArea.setText("Error al cargar datos de libros: " + e.getMessage());
         }
         return false;
     }

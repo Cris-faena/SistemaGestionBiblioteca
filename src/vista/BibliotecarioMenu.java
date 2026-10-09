@@ -8,15 +8,18 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.SQLException;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
-public class Bibliotecario extends JFrame {
+public class BibliotecarioMenu extends JFrame {
     private JPanel PanelPrincipalBiblio;
-    private JLabel lblCategorias;
     private JTextField txtTituloLibros;
     private JTextField txtCategoriaSub;
     private JLabel lblCategoriaSub;
@@ -57,7 +60,7 @@ public class Bibliotecario extends JFrame {
     private JLabel lblStock;
     private JLabel lblFiltrarLibro;
     private JLabel lblIDCategoriaLibro;
-    private JTabbedPane tabbedPane1;
+    private JTabbedPane JTabbedCategorias;
     private JPanel PanelBotonesLibros;
     private JPanel PanelFiltrosLibro;
     private JPanel PanelTextosLibros;
@@ -117,6 +120,20 @@ public class Bibliotecario extends JFrame {
     private JTextArea jtaAreaPrestamos;
     private JLabel lblFechaDevolucionPrestamo;
     private JTextField txtFechaDevolucionPrestamo;
+    private JButton btnLimpiarAREA;
+    private JPanel PanelReportesPrincipal;
+    private JScrollPane jspTablaFiltrosReportes;
+    private JTextArea jtaResumen;
+    private JButton btnMostrar1;
+    private JButton btnMostar2;
+    private JButton btnMostrar3;
+    private JTextArea jtaMostrarInformacion;
+    private JButton btnQuitar1;
+    private JButton btnQuitar2;
+    private JButton btnQuitar3;
+    private JPanel PanelJAREA;
+    private JPanel PanelMitarIzquierda;
+    private JPanel PanelMitarDerecha;
 
     private int idCategoriaSeleccionado = -1;
     private int idLibroSeleccionado = -1;
@@ -133,9 +150,10 @@ public class Bibliotecario extends JFrame {
     private final ControladorEstudiante controladorEstudiante = new ControladorEstudiante();
     private final ControladorPrestamo controladorPrestamo = new ControladorPrestamo();
     private final ControladorBibliotecario controladorBibliotecario = new ControladorBibliotecario();
+    private final ControladorUsuario controladorUsuario = new ControladorUsuario();
 
-    public Bibliotecario() {
-        setTitle("Bibliotecario");
+    public BibliotecarioMenu() {
+        setTitle("BibliotecarioMenu");
         setContentPane(PanelPrincipalBiblio);
         setSize(430, 220);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -165,12 +183,23 @@ public class Bibliotecario extends JFrame {
         PanelFiltrosPrestamos.setBackground(new Color(173, 216, 230));
         PanelTramitarPrestamos.setBackground(new Color(255, 220, 220));
 
+        PanelJAREA.setBackground(new Color(250, 240, 230));
+        PanelMitarIzquierda.setBackground(new Color(250, 240, 230));
+        PanelMitarDerecha.setBackground(new Color(250, 240, 230));
+        PanelReportesPrincipal.setBackground(new Color(245, 222, 179));
+
         // Se añaden funcionalidades a la JTextArea
         jtaAreaPrestamos.setEditable(false);
         jtaAreaPrestamos.setWrapStyleWord(true);
         jtaAreaPrestamos.setLineWrap(true);
         jtaAreaPrestamos.setBackground(new Color(255, 255, 230)); // Se añade color.
+        jtaAreaPrestamos.setFont(new Font("Arial", Font.BOLD, 18));
 
+        jtaResumen.setEditable(false);
+        jtaResumen.setWrapStyleWord(true);
+        jtaResumen.setLineWrap(true);
+        jtaResumen.setBackground(new Color(255, 255, 230));
+        jtaResumen.setFont(new Font("Arial", Font.PLAIN, 14));
 
         jspTablaCategoria.setViewportView(tblCategoria);
         jspTablaCategoria.setPreferredSize(new Dimension(200, 300));
@@ -178,7 +207,6 @@ public class Bibliotecario extends JFrame {
         jspTablaCategoria.setMinimumSize(new Dimension(200, 300));
 
         jspSubLibros.setViewportView(tblLibros);
-        //jspSubLibros.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         jspSubLibros.setPreferredSize(new Dimension(760, 300));
         jspSubLibros.setMaximumSize(new Dimension(770, 300));
         jspSubLibros.setMinimumSize(new Dimension(760, 300));
@@ -319,6 +347,7 @@ public class Bibliotecario extends JFrame {
         btnEjecutarPrestamo.setMinimumSize(new Dimension(100, 30));
         btnEjecutarPrestamo.setPreferredSize(new Dimension(100, 30));
 
+
         // Se edita el tamaño de los JComboBox
         jcbLibros.setMaximumSize(new Dimension(100, 30));
         jcbLibros.setMinimumSize(new Dimension(100, 30));
@@ -427,6 +456,14 @@ public class Bibliotecario extends JFrame {
         btnListarPrestamos.addActionListener(event -> {listarPrestamos();});
         btnFiltrarPrestamos.addActionListener(event -> {filtrarPrestamo();});
         btnEjecutarPrestamo.addActionListener(event -> {ejecutarLosHilos();});
+        btnLimpiarAREA.addActionListener(event ->{limpiarAreaTexto();});
+
+        btnMostrar1.addActionListener(event ->{mostrarNombresFiltrados();});
+        btnMostar2.addActionListener(event ->{mostrarLibrosFiltrados();});
+        btnMostrar3.addActionListener(event ->{mostrarUsuariosFiltrados();});
+        btnQuitar1.addActionListener(event -> {quitarFiltros();});
+        btnQuitar2.addActionListener(event -> {quitarFiltros();});
+        btnQuitar3.addActionListener(event -> {quitarFiltros();});
 
 
         // Se añade color a las JTables
@@ -1880,6 +1917,7 @@ public class Bibliotecario extends JFrame {
 
     private void ejecutarLosHilos()
     {
+        // Nombre de los trabajadores que se desempeñan como bibliotecarios
         String nombreBibliotecario1 = "Cristian";
         String nombreBibliotecario2 = "Enrique";
 
@@ -1919,8 +1957,78 @@ public class Bibliotecario extends JFrame {
             return;
         }
 
-        modelo.Bibliotecario bibliotecario = controladorBibliotecario.crearBibliotecario(nombreBibliotecario1, idEstudianteDevuelto, idLibroDevuelto );
+        Bibliotecario bibliotecario = controladorBibliotecario.crearBibliotecario(nombreBibliotecario1, idEstudianteDevuelto, idLibroDevuelto );
+        bibliotecario.setLogger(this::agregarMensaje);
+        int tamañoHilo = 2; // Se establece 2, simulando que hay máximo 2 bibliotecarios
 
+        ExecutorService executor;
+        executor = Executors.newFixedThreadPool(tamañoHilo);
+        executor.execute(bibliotecario);
+
+        executor.shutdown();
+
+        try {
+            // Espera hasta que terminen todas
+            if (!executor.awaitTermination(60, TimeUnit.SECONDS)) {
+                JOptionPane.showMessageDialog(this, "Algunas tareas no terminaron a tiempo. Forzando cierre...");
+                executor.shutdownNow();   // Interrumpe las que aún estén corriendo
+            } else {
+                JOptionPane.showMessageDialog(this, "Todas las tareas terminaron.");
+            }
+        } catch (InterruptedException e) {
+            executor.shutdownNow();
+            Thread.currentThread().interrupt();
+        }
     }
+    private void limpiarAreaTexto()
+    {
+        jtaAreaPrestamos.setText("");
+    }
+
+    private void mostrarNombresFiltrados()
+    {
+
+        if (controladorEstudiante.cargarEstudiantesJAREA(jtaResumen))
+        {
+            JOptionPane.showMessageDialog(this, "Estudiantes agregados correctamente");
+            return;
+        }
+        else
+        {
+            JOptionPane.showMessageDialog(this, "Estudiantes no agregados");
+        }
+    }
+
+    private void mostrarLibrosFiltrados()
+    {
+        if (controladorLibros.consultarLibros(jtaResumen))
+        {
+            JOptionPane.showMessageDialog(this, "Libros agregados correctamente");
+            return;
+        }
+        else
+        {
+            JOptionPane.showMessageDialog(this, "No se puedo agregar los libros al área de visualización");
+        }
+    }
+
+    private void mostrarUsuariosFiltrados()
+    {
+        if (controladorUsuario.consultarUsuarios(jtaResumen))
+        {
+            JOptionPane.showMessageDialog(this, "Usuarios agregados correctamente");
+            return;
+        }
+        else
+        {
+            JOptionPane.showMessageDialog(this, "No se pudieron cargar los usuarios");
+        }
+    }
+
+    private void quitarFiltros()
+    {
+        jtaResumen.setText("");
+    }
+
 }
 

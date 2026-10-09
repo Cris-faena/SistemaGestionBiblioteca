@@ -1,10 +1,13 @@
 package ui;
 
+import modelo.Bibliotecario;
+import modelo.Usuario;
 import util.ConexionBD;
 
 import java.sql.SQLException;
 import controlador.AuthController;
-import vista.Bibliotecario;
+import vista.BibliotecarioMenu;
+import vista.EstudianteUsuario;
 import vista.Login;
 
 public class Main
@@ -15,7 +18,7 @@ public class Main
         ConexionBD.getInstancia().obtenerConexion();
 
         javax.swing.SwingUtilities.invokeLater(() -> {
-            Bibliotecario login = new Bibliotecario();
+            BibliotecarioMenu login = new BibliotecarioMenu();
             login.setVisible(true);
         });
     }

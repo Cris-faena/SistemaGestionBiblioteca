@@ -4,6 +4,7 @@ import DAO.LibrosDAO;
 import DAO.impl.LibrosDAOImpl;
 import modelo.Libros;
 
+import javax.swing.*;
 import java.util.List;
 
 public class ControladorLibros
@@ -22,10 +23,18 @@ public class ControladorLibros
     // ===================== BUSCAR LIBRO POR ID O AUTOR =====================
     public Libros buscarLibroPorId(int idLibro) {return libroDAO.buscarPorId(idLibro);}
     public Libros buscarLibroPorAutor(String autorLibro) {return libroDAO.buscarPorAutor(autorLibro);}
+    public Libros buscarLibroPorTitulo(String tituloLibro) {return libroDAO.buscarPorTitulo(tituloLibro);}
 
     // ===================== LISTAR TODOS LOS LIBROS =====================
     public List<Libros> obtenerTodosLibros() {return libroDAO.listarTodos();}
 
     // ===================== COMPROBAR ISBN DE UN LIBRO =====================
     public boolean comprobarISBNLibro(String isbn) {return libroDAO.existeISBN(isbn);}
+
+    // ===================== DISMINUIR STOCK DE UN LIBRO =====================
+    public synchronized boolean retirarLibro(int idLibro) {return libroDAO.retirarLibro(idLibro);}
+
+    // ===================== CONSULTAR TODOS LOS LIBRO =====================
+    public boolean consultarLibros(JTextArea area) {return libroDAO.cargarConsultaLibros(area);}
+
 }

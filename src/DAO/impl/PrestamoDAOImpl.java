@@ -4,6 +4,7 @@ import DAO.PrestamoDAO;
 import modelo.Prestamos;
 import util.ConexionBD;
 
+import javax.swing.table.DefaultTableModel;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -207,5 +208,86 @@ public class PrestamoDAOImpl implements PrestamoDAO
             return null;
         }
         return lista;
+    }
+
+
+    public boolean consultarEstudiantePrestamo(DefaultTableModel modelo)
+    {
+        modelo.setRowCount(0);
+        String sql =
+                "SELECT e.nombre AS estudiante, " +
+                        "       l.titulo AS libro, " +
+                        "       p.fecha_devolucion, " +
+                        "       p.devuelto " +
+                        "FROM prestamos p " +
+                        "JOIN estudiantes e ON p.id_estudiante = e.id " +
+                        "JOIN libros l ON p.id_libro = l.id " +
+                        "ORDER BY e.nombre, l.titulo";
+
+        try (Connection conn = ConexionBD.getInstancia().obtenerConexion();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next())
+            {
+                String estudiante = rs.getString("estudiante");
+                String libro = rs.getString("libro");
+                Date fechaDev = rs.getDate("fecha_devolucion");
+                boolean devuelto = rs.getBoolean("devuelto");
+
+                modelo.addRow(new Object[]{
+                        estudiante,
+                        libro,
+                        fechaDev != null ? fechaDev.toString() : "Sin fecha",
+                        devuelto ? "en biblioteca" : "en poder del usuario"});
+            }
+            return  true;
+        }
+        catch(SQLException e)
+        {
+            System.out.println("Error al cargar la tabla de estudiantes: " + e.getMessage());
+        }
+        return false;
+    }
+
+    public boolean consultarPrestamoEspecifico(DefaultTableModel modelo, int idEstudiante)
+    {
+        modelo.setRowCount(0);
+
+        String sql =
+                "SELECT e.nombre AS estudiante, " +
+                        "       l.titulo AS libro, " +
+                        "       p.fecha_devolucion, " +
+                        "       p.devuelto " +
+                        "FROM prestamos p " +
+                        "JOIN estudiantes e ON p.id_estudiante = e.id " +
+                        "JOIN libros l ON p.id_libro = l.id " +
+                        "WHERE p.id_estudiante = ? " +
+                        "ORDER BY e.nombre, l.titulo";
+
+        try (Connection conn = ConexionBD.getInstancia().obtenerConexion();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, idEstudiante);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    String estudiante = rs.getString("estudiante");
+                    String libro = rs.getString("libro");
+                    Date fechaDev = rs.getDate("fecha_devolucion");
+                    boolean devuelto = rs.getBoolean("devuelto");
+
+                    modelo.addRow(new Object[]{
+                            estudiante,
+                            libro,
+                            fechaDev != null ? fechaDev.toString() : "Sin fecha",
+                            devuelto ? "En biblioteca" : "En poder del usuario"
+                    });
+                }
+            }
+            return true;
+        } catch (SQLException e) {
+            System.out.println("Error al cargar la tabla de préstamos: " + e.getMessage());
+            return false;
+        }
     }
 }

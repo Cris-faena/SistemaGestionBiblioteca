@@ -3,6 +3,7 @@ package DAO;
 import modelo.Categoria;
 import modelo.Estudiante;
 
+import javax.swing.*;
 import java.util.List;
 
 public interface EstudianteDAO
@@ -53,4 +54,11 @@ public interface EstudianteDAO
      * @return una lista de objetos "estudiante" previamente almacenada.
      */
     public List<Estudiante> listarTodos();
+
+    /**
+     * Método que consulta los estudiantes almacenados en la BD.
+     * @param textArea area de texto en donde se desea mostrar los valores.
+     * @return "true" si se logra hacer la consulta, "false" si no se logró
+     */
+    public boolean cargarEstudiantes(JTextArea textArea);
 }

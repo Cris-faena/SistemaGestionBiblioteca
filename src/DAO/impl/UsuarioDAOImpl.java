@@ -6,6 +6,7 @@ import modelo.Usuario;
 import util.ConexionBD;
 import util.HashUtil;
 
+import javax.swing.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -205,5 +206,35 @@ public class UsuarioDAOImpl implements UsuarioDAO
     public List<Usuario> listarTodos()
     {
         return null;
+    }
+
+    public boolean cargarConsultaUsuarios(JTextArea textArea)
+    {
+        String sql = "SELECT id,nombre, rut, correo, rol FROM usuarios ORDER BY rol ASC";
+
+        try (Connection conn = ConexionBD.getInstancia().obtenerConexion();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery())
+        {
+            StringBuilder sb  = new StringBuilder();
+            while (rs.next())
+            {
+                sb.append("\n---------------- USUARIOS ---------------------\n");
+                sb.append("ID: ").append(rs.getInt("id")).append("\n");
+                sb.append("Nombre: ").append(rs.getString("nombre")).append("\n");
+                sb.append("Rut: ").append(rs.getString("rut")).append("\n");
+                sb.append("Correo: ").append(rs.getString("correo")).append("\n");
+                sb.append("Rol: ").append(rs.getString("rol")).append("\n");
+                sb.append("-------------------------------------------------------------\n");
+            }
+            textArea.setText(sb.toString());
+            return true;
+        }
+        catch (SQLException e)
+        {
+            System.out.println("Error al cargar los usuarios: " + e.getMessage());
+            textArea.setText("Error al cargar datos de los usuarios: " + e.getMessage());
+        }
+        return false;
     }
 }

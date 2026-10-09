@@ -3,6 +3,7 @@ package DAO;
 import modelo.Categoria;
 import modelo.Libros;
 
+import javax.swing.*;
 import java.util.List;
 
 public interface LibrosDAO
@@ -45,6 +46,13 @@ public interface LibrosDAO
      */
     public Libros buscarPorAutor(String autorLibro);
 
+    /**
+     * Método que permitirá buscar un libro en la base de datos.
+     * @param tituloLibro parámetro que se requiere buscar.
+     * @return un Objeto tipo "Libro" que coincide con el string ingresado
+     */
+    public Libros buscarPorTitulo(String tituloLibro);
+
     // ===================== LISTAR TODOS =====================
     /**
      * Método que permitirá devolver una lista de libros de la base de datos.
@@ -58,4 +66,13 @@ public interface LibrosDAO
      * @return "true" si ya existe, "false" si no existe
      */
     public boolean existeISBN(String isbn);
+
+    /**
+     * Método que permite disminuir el stock de un libro en específico
+     * @param idLibro "id del libro que se quiere modificar el stock
+     */
+    public boolean retirarLibro(int idLibro);
+
+
+    public boolean cargarConsultaLibros(JTextArea textArea);
 }

@@ -1,7 +1,6 @@
 package vista;
 
 import controlador.AuthController;
-import modelo.TipoUsuario;
 import modelo.Usuario;
 
 import javax.swing.*;
@@ -106,15 +105,15 @@ public class Login extends JFrame
             String rol = u.getRol().name();
             if ("ESTUDIANTE".equals(rol))
             {
-                Escolar escolar = new Escolar();
+                EstudianteUsuario escolar = new EstudianteUsuario(u);
                 escolar.setVisible(true);
                 this.dispose();
 
             }
             else if ("BIBLIOTECARIO".equals(rol))
             {
-                Bibliotecario bibliotecario = new Bibliotecario();
-                bibliotecario.setVisible(true);
+                BibliotecarioMenu bibliotecarioMenu = new BibliotecarioMenu();
+                bibliotecarioMenu.setVisible(true);
                 this.dispose();
 
             }

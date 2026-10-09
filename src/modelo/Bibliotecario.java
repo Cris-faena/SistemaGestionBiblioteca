@@ -2,6 +2,7 @@ package modelo;
 
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.function.Consumer;
+import controlador.*;
 
 /**
  * Clase que representa un trabajador de la Biblioteca.
@@ -13,6 +14,7 @@ public class Bibliotecario implements Runnable
     private int id_libro;   // Atributo que almacena el "id" del libro que transporta.
     private final PriorityBlockingQueue<Libros> bolsaDeLibros = new PriorityBlockingQueue<>();  // Atributo para almacenar los libros que lleva.
     private Consumer<String> logger;    // Callback para enviar mensajes a la GUI
+    ControladorLibros controladorLibros = new ControladorLibros();
 
     // Constructor sin parámetros:
     public Bibliotecario(){}
@@ -54,20 +56,20 @@ public class Bibliotecario implements Runnable
     @Override
     public void run()
     {
-        while (!Thread.currentThread().isInterrupted())  // mientras el hilo que se ejecuta no sea interrumpido, ejecuta esto:
+        try
         {
-            try {
-                Thread.sleep(tiempoAleatorio());
-                enCaminoABodega();
-                Thread.sleep(tiempoAleatorio());
-                bibliotecarioEntregaLibros();
-                Thread.sleep(tiempoAleatorio());
-                bibliotecarioEntregaLibros();
-                Thread.sleep(tiempoAleatorio());
-            } catch (InterruptedException e) {
+            enCaminoABodega();
+            Thread.sleep(tiempoAleatorio());
+            bibliotecarioEntregaLibros();
+            Thread.sleep(tiempoAleatorio());
+            bibliotecarioActualizaBD();
+            Thread.sleep(tiempoAleatorio());
+            finalizarCiclo();
+        }
+        catch (InterruptedException e)
+        {
                 Thread.currentThread().interrupt();
                 log("[MAIN] se ha interrumpido el proceso 'run()'.");
-            }
         }
     }
 
@@ -75,11 +77,18 @@ public class Bibliotecario implements Runnable
     {
         try
         {
+            Thread.sleep(2000);
             log("[" + Thread.currentThread().getName() + "] " + "[BIBLIOTECARIO] " +
                     getNombre() +
                     " se encuentra caminando a la bodega a buscar el libro.");
             Thread.sleep(2000);
-
+            if (controladorLibros.retirarLibro(id_libro))
+            {
+                log("[" + Thread.currentThread().getName() + "] " + "[BIBLIOTECARIO] " +
+                        getNombre() +
+                        " retiró el libro con éxito y se dirige a entregarlo al estudiante.");
+            }
+            Thread.sleep(2000);
         }
         catch (InterruptedException e)
         {
@@ -92,6 +101,7 @@ public class Bibliotecario implements Runnable
     {
         try
         {
+            Thread.sleep(2000);
             log("[" + Thread.currentThread().getName() + "] " + "[BIBLIOTECARIO] " +
                     getNombre() + " " + "está entregando el libro al estudiante.");
             Thread.sleep(2000);
@@ -108,6 +118,7 @@ public class Bibliotecario implements Runnable
     {
         try
         {
+            Thread.sleep(2000);
             log("[" + Thread.currentThread().getName() + "] " + "[BIBLIOTECARIO] " +
                     getNombre() + " " + "está actualizando la base de datos.");
             Thread.sleep(2000);
@@ -120,5 +131,9 @@ public class Bibliotecario implements Runnable
         }
     }
 
+    public void finalizarCiclo() throws InterruptedException {
+        log("[" + Thread.currentThread().getName() + "] [BIBLIOTECARIO] : " + getNombre() +
+                " finaliza su jornada.");
+    }
 }
 

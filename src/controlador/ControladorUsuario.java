@@ -5,6 +5,7 @@ import modelo.Usuario;
 import util.HashUtil;
 import DAO.UsuarioDAO;
 
+import javax.swing.*;
 import java.sql.SQLException;
 
 public class ControladorUsuario
@@ -22,5 +23,6 @@ public class ControladorUsuario
         return usuarioDAO.insertar(usuario);
     }
 
+    public boolean consultarUsuarios(JTextArea area) {return usuarioDAO.cargarConsultaUsuarios(area);}
 
 }

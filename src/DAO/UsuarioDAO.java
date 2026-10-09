@@ -2,6 +2,7 @@ package DAO;
 
 import modelo.Usuario;
 
+import javax.swing.*;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -56,4 +57,6 @@ public interface UsuarioDAO
      * @return un Usuario previamente autenticado
      */
     public Usuario autenticar(String correo, String contraseñaPlana);
+
+    public boolean cargarConsultaUsuarios(JTextArea textArea);
 }

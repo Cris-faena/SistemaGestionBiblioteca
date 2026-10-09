@@ -4,6 +4,7 @@ import DAO.EstudianteDAO;
 import modelo.Estudiante;
 import util.ConexionBD;
 
+import javax.swing.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -198,5 +199,35 @@ public class EstudianteDAOImpl implements EstudianteDAO
             return null;
         }
         return lista;
+    }
+
+    public boolean cargarEstudiantes(JTextArea textArea)
+    {
+        String sql = "SELECT id,nombre,rut,curso,correo FROM estudiantes ORDER BY id";
+
+        try (Connection conn = ConexionBD.getInstancia().obtenerConexion();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery())
+        {
+            StringBuilder sb  = new StringBuilder();
+            while (rs.next())
+            {
+                sb.append("\n---------------- ESTUDIANTE ---------------------\n");
+                sb.append("ID: ").append(rs.getInt("id")).append("\n");
+                sb.append("Nombre: ").append(rs.getString("nombre")).append("\n");
+                sb.append("Rut: ").append(rs.getString("rut")).append("\n");
+                sb.append("Curso: ").append(rs.getString("curso")).append("\n");
+                sb.append("Correo: ").append(rs.getString("correo")).append("\n");
+                sb.append("-------------------------------------------------------------\n");
+            }
+            textArea.setText(sb.toString());
+            return true;
+        }
+        catch (SQLException e)
+        {
+            System.out.println("Error al cargar estudiantes: " + e.getMessage());
+            textArea.setText("Error al cargar datos: " + e.getMessage());
+        }
+        return false;
     }
 }

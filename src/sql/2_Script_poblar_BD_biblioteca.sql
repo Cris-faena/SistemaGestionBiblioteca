@@ -2,7 +2,7 @@ USE biblioteca;
 
 -- Insertar usuarios
 INSERT INTO usuarios (nombre, rut, correo, contraseña, rol) VALUES
-('Antonia Pérez', '12345678-9', 'antonia@correo.cl', 'clave123', 'bibliotecario'),
+('Antonia Pérez', '12345678-9', 'antonia@correo.cl', 'clave123', 'bibliotecarioMenu'),
 ('Carlos Ruiz', '98765432-1', 'carlos@correo.cl', 'clave123', 'estudiante'),
 ('María Torres', '11222333-4', 'maria@correo.cl', 'clave123', 'estudiante'),
 ('Ignacio Silva', '22334455-6', 'ignacio@correo.cl', 'clave123', 'estudiante'),
