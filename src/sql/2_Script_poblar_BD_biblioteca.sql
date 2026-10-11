@@ -28,11 +28,11 @@ INSERT INTO estudiantes (nombre, rut, curso, correo) VALUES
 
 -- Insertar categorías
 INSERT INTO categorias (nombre) VALUES
-('Ciencia Ficción'),
-('Historia'),
-('Filosofía'),
-('Literatura'),
-('Tecnología');
+('CIENCIA_FICCION'),
+('HISTORIA'),
+('FILOSOFIA'),
+('LITERATURA'),
+('TECNOLOGIA');
 
 -- Insertar libros
 INSERT INTO libros (titulo, autor, isbn, editorial, stock, id_categoria) VALUES
