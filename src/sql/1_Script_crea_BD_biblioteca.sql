@@ -7,7 +7,7 @@ CREATE TABLE usuarios (
     rut VARCHAR(12) UNIQUE,
     correo VARCHAR(100),
     contraseña VARCHAR(100),
-    rol ENUM('bibliotecarioMenu', 'estudiante') NOT NULL
+    rol ENUM('bibliotecario', 'estudiante') NOT NULL
 );
 
 CREATE TABLE estudiantes (
