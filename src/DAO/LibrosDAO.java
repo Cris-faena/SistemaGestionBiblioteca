@@ -73,6 +73,5 @@ public interface LibrosDAO
      */
     public boolean retirarLibro(int idLibro);
 
-
     public boolean cargarConsultaLibros(JTextArea textArea);
 }

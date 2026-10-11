@@ -68,6 +68,7 @@ public class EstudianteUsuario extends JFrame
 
     public EstudianteUsuario(Usuario usuario)
     {
+        this.usuarioActual = usuario;
         setTitle("EstudianteUsuario");
         setContentPane(PanelEstudianteUsuario);
         setSize(600, 400);
@@ -99,31 +100,39 @@ public class EstudianteUsuario extends JFrame
         inicializarTablaPrestamos();
         cargarTablaLibros();
         cargarJcbLibrosDisponibles();
+
         controladorPrestamo.consultarEstudianteConPrestamo(modeloTablaPrestamos);
 
-        this.usuarioActual = usuario;
+
         rellenarCampos();
+
     }
     // Acá termina el constructor
 
+    /**
+     * Método que carga los libros disponibles en el JComboBox del panel de Estudiante
+     */
     private void cargarJcbLibrosDisponibles()
     {
-        List<Libros> librosDisponibles = new ArrayList<Libros>();
-        librosDisponibles = controladorLibros.obtenerTodosLibros();
+        List<Libros> librosDisponibles = controladorLibros.obtenerTodosLibros();
+
         for (Libros libro : librosDisponibles)
         {
             if (libro.getStock() > 0)
             {
                 jcbLibrosDisponibles.addItem(libro.getTitulo());
             }
-            else
-            {
-                JOptionPane.showMessageDialog(null, "El libro no está disponible");
-                return;
-            }
+        }
+
+        if (jcbLibrosDisponibles.getItemCount() == 0)
+        {
+            JOptionPane.showMessageDialog(null, "No hay libros disponibles");
         }
     }
 
+    /**
+     * Método que inicializa la tabla de libros de la base de datos
+     */
     private void inicializarTablaLibros()
     {
         String[] columnas = {"ID_libro", "Título_libro", "Autor_libro", "ISBN_libro", "Editorial_libro", "Stock_libro", "ID_categoria"};
@@ -162,6 +171,10 @@ public class EstudianteUsuario extends JFrame
             }
         });
     }
+
+    /**
+     * Método que carga los libros de la base de datos cuando se le invoca
+     */
     private void cargarTablaLibros() {
         modeloTablaLibros.setRowCount(0); // limpia la tabla
 
@@ -178,6 +191,9 @@ public class EstudianteUsuario extends JFrame
         }
     }
 
+    /**
+     * Método que llama a la tabla estudiantes cuando se le invoca.
+     */
     private void cargarTablaEstudiantes() {
         modeloTablaEstudiante.setRowCount(0); // limpia la tabla
 
@@ -192,6 +208,9 @@ public class EstudianteUsuario extends JFrame
         }
     }
 
+    /**
+     * Método que inicializa la tabla préstamos al arrancar la aplicación.
+     */
     private void inicializarTablaPrestamos()
     {
         String[] columnas = {"Estudiante", "Libro", "Fecha Devolución", "Condición"};
@@ -210,12 +229,19 @@ public class EstudianteUsuario extends JFrame
         tblLibrosDelEstudiante.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     }
 
+    /**
+     * Método que llama a la tabla de préstamos cuando se le invoca
+     */
     private void cargarTablaPrestamos()
     {
         modeloTablaPrestamos.setRowCount(0);
         controladorPrestamo.consultarEstudianteConPrestamo(modeloTablaPrestamos);
     }
 
+    /**
+     * Método que permite rellenar los campos de texto del panel de Estudiantes.
+     * Se le asigna una condición para que no sea editable.
+     */
     private void rellenarCampos() {
         txtNombreEstudiante.setText(usuarioActual.getNombre());
         txtNombreEstudiante.setEditable(false);
@@ -225,6 +251,9 @@ public class EstudianteUsuario extends JFrame
         txtCorreoEstudiante.setEditable(false);
     }
 
+    /**
+     * Método que permite agregar un USUARIO a la base de datos como un ESTUDIANTE.
+     */
     private void agregarEstudianteALista()
     {
         String nombre = txtNombreEstudiante.getText().toLowerCase().trim();
@@ -245,11 +274,11 @@ public class EstudianteUsuario extends JFrame
 
         if (controladorEstudiante.insertarEstudiante(e)) {
             JOptionPane.showMessageDialog(this, "Estudiante insertado correctamente");
-            cargarTablaEstudiantes();
         }
         else
         {
-            JOptionPane.showMessageDialog(this, "no se pudo agregar el estudiante");
+
+            JOptionPane.showMessageDialog(this, "no se pudo agregar el estudiante o este ya existe en la BD.");
         }
     }
 
@@ -358,6 +387,9 @@ public class EstudianteUsuario extends JFrame
         txtFechaDevolucion.setText("");
     }
 
+    /**
+     * Método que permite filtrar los libros que pertenecen al estudiante que se inició en la aplicación.
+     */
     private void filtrarSoloUsuario()
     {
         String nombreEstudiante  = txtNombreEstudiante.getText().toLowerCase().trim();
@@ -386,6 +418,5 @@ public class EstudianteUsuario extends JFrame
             JOptionPane.showMessageDialog(this, "Estudiante filtrado con éxito");
             controladorPrestamo.consultarPrestamoEspecificoPorEstudiante(modeloTablaPrestamos, idEstudiante);
         }
-
     }
 }

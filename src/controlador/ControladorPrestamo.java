@@ -25,6 +25,7 @@ public class ControladorPrestamo
     public List<Prestamos> buscarPrestamoPorBoolean(boolean devuelto) {return prestamoDAO.buscarPorDevuelto(devuelto);}
     public boolean consultarEstudianteConPrestamo(DefaultTableModel modelo) {return prestamoDAO.consultarEstudiantePrestamo(modelo);}
     public boolean consultarPrestamoEspecificoPorEstudiante(DefaultTableModel modelo, int idEstudiante) {return prestamoDAO.consultarPrestamoEspecifico(modelo, idEstudiante);}
+    public boolean actualizarEstadoPrestamosLibro(int idPrestamo) {return prestamoDAO.actualizarEstadoDePrestamoLibro(idPrestamo);}
 
     // ===================== LISTAR TODOS LOS PRÉSTAMOS =====================
     public List<Prestamos> obtenerTodosLosPrestamos() {return prestamoDAO.listarTodos();}

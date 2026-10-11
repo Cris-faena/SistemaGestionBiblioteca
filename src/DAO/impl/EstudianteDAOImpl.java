@@ -33,6 +33,11 @@ public class EstudianteDAOImpl implements EstudianteDAO
         }
         catch (SQLException e)
         {
+            if (e.getErrorCode() == 1062)
+            {
+                System.out.println("El RUT ya está registrado en el sistema." + e.getMessage());
+                return false;
+            }
             System.out.println("Error al insertar el estudiante: " + e.getMessage());
             return false;
         }

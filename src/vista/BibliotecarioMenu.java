@@ -160,7 +160,7 @@ public class BibliotecarioMenu extends JFrame {
         setLocationRelativeTo(null);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
 
-
+        // Se modifican los colores de los paneles.
         PanelPrincipalBiblio.setBackground(new Color(245, 222, 179));
 
         PanelSubCategorias.setBackground(new Color(250, 240, 230));
@@ -1920,7 +1920,6 @@ public class BibliotecarioMenu extends JFrame {
         // Nombre de los trabajadores que se desempeñan como bibliotecarios
         String nombreBibliotecario1 = "Cristian";
         String nombreBibliotecario2 = "Enrique";
-
         String idHilosTxt = txtTramitarPorId.getText().trim();
         if (idHilosTxt.isEmpty())
         {
@@ -1957,7 +1956,7 @@ public class BibliotecarioMenu extends JFrame {
             return;
         }
 
-        Bibliotecario bibliotecario = controladorBibliotecario.crearBibliotecario(nombreBibliotecario1, idEstudianteDevuelto, idLibroDevuelto );
+        Bibliotecario bibliotecario = controladorBibliotecario.crearBibliotecario(nombreBibliotecario1, idPrestamo, idEstudianteDevuelto, idLibroDevuelto );
         bibliotecario.setLogger(this::agregarMensaje);
         int tamañoHilo = 2; // Se establece 2, simulando que hay máximo 2 bibliotecarios
 
@@ -1979,6 +1978,7 @@ public class BibliotecarioMenu extends JFrame {
             executor.shutdownNow();
             Thread.currentThread().interrupt();
         }
+        cargarTablaPrestamos();
     }
     private void limpiarAreaTexto()
     {

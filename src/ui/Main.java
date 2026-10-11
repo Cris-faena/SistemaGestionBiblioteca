@@ -18,7 +18,7 @@ public class Main
         ConexionBD.getInstancia().obtenerConexion();
 
         javax.swing.SwingUtilities.invokeLater(() -> {
-            BibliotecarioMenu login = new BibliotecarioMenu();
+            Login login = new Login(auth);
             login.setVisible(true);
         });
     }

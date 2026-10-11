@@ -4,8 +4,8 @@ import modelo.Bibliotecario;
 
 public class ControladorBibliotecario
 {
-    public Bibliotecario crearBibliotecario(String nombre, int idEstudiante, int idLibro)
+    public Bibliotecario crearBibliotecario(String nombre, int idPrestamo, int idEstudiante, int idLibro)
     {
-        return new Bibliotecario(nombre, idEstudiante, idLibro, System.out::println);
+        return new Bibliotecario(nombre, idPrestamo, idEstudiante, idLibro, System.out::println);
     }
 }

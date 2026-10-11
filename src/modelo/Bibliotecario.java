@@ -10,19 +10,22 @@ import controlador.*;
 public class Bibliotecario implements Runnable
 {
     private String nombre;      // Atributo que almacena el nombre del bibliotecario
+    private int id_prestamo;    // atributo del préstamo que tramita el bibliotecario.
     private int id_estudiante;  // Atributo que almacena el "id" del estudiante a quien le entregará el libro
     private int id_libro;   // Atributo que almacena el "id" del libro que transporta.
     private final PriorityBlockingQueue<Libros> bolsaDeLibros = new PriorityBlockingQueue<>();  // Atributo para almacenar los libros que lleva.
     private Consumer<String> logger;    // Callback para enviar mensajes a la GUI
     ControladorLibros controladorLibros = new ControladorLibros();
+    ControladorPrestamo controladorPrestamo = new ControladorPrestamo();
 
     // Constructor sin parámetros:
     public Bibliotecario(){}
 
     // Constructor con parámetros:
-    public Bibliotecario (String nombre, int id_estudiante, int id_libro, Consumer<String> logger)
+    public Bibliotecario (String nombre, int id_prestamo, int id_estudiante, int id_libro, Consumer<String> logger)
     {
         this.nombre = nombre;
+        this.id_prestamo = id_prestamo;
         this.id_estudiante = id_estudiante;
         this.id_libro = id_libro;
         this.logger = logger != null ? logger: System.out::println; // fallback por si no se pasa
@@ -31,13 +34,15 @@ public class Bibliotecario implements Runnable
     // Se implementan los GETTERS:
 
     public String  getNombre() {return nombre;}
+    public int getId_prestamo() {return id_prestamo;}
     public int getId_estudiante() {return id_estudiante;}
     public int getId_libro() {return id_libro;}
     public PriorityBlockingQueue <Libros> getBolsaDeLibros() {return bolsaDeLibros;}
 
     // Se implementan los SETTERS:
     public void setNombre(String nombre) {this.nombre = nombre;}
-    public int setId_estudiante(int id_estudiante) {return this.id_estudiante = id_estudiante;}
+    public void setId_prestamo(int id_prestamo) {this.id_prestamo = id_prestamo;}
+    public void setId_estudiante(int id_estudiante) {this.id_estudiante = id_estudiante;}
     public void setId_libro(int id_libro) {this.id_libro = id_libro;}
     public void setLogger(Consumer<String> logger) {this.logger = logger != null ? logger : System.out::println;}
 
@@ -88,7 +93,6 @@ public class Bibliotecario implements Runnable
                         getNombre() +
                         " retiró el libro con éxito y se dirige a entregarlo al estudiante.");
             }
-            Thread.sleep(2000);
         }
         catch (InterruptedException e)
         {
@@ -104,8 +108,6 @@ public class Bibliotecario implements Runnable
             Thread.sleep(2000);
             log("[" + Thread.currentThread().getName() + "] " + "[BIBLIOTECARIO] " +
                     getNombre() + " " + "está entregando el libro al estudiante.");
-            Thread.sleep(2000);
-
         }
         catch (InterruptedException e)
         {
@@ -121,7 +123,7 @@ public class Bibliotecario implements Runnable
             Thread.sleep(2000);
             log("[" + Thread.currentThread().getName() + "] " + "[BIBLIOTECARIO] " +
                     getNombre() + " " + "está actualizando la base de datos.");
-            Thread.sleep(2000);
+            controladorPrestamo.actualizarEstadoPrestamosLibro(id_prestamo);
 
         }
         catch (InterruptedException e)

@@ -290,4 +290,23 @@ public class PrestamoDAOImpl implements PrestamoDAO
             return false;
         }
     }
+
+    public boolean actualizarEstadoDePrestamoLibro(int idPrestamo)
+    {
+        String sql = "UPDATE prestamos SET devuelto = false WHERE id= ?";
+
+        try (Connection conn = ConexionBD.getInstancia().obtenerConexion();
+             PreparedStatement ps = conn.prepareStatement(sql))
+        {
+            ps.setInt(1, idPrestamo);
+
+            int filasAfectadas = ps.executeUpdate();
+            return filasAfectadas > 0;
+        }
+        catch (SQLException e)
+        {
+            System.out.println("Error al cambiar el estado de los libros: " + e.getMessage());
+        }
+        return false;
+    }
 }

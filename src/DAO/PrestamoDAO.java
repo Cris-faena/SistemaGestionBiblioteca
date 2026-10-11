@@ -58,5 +58,5 @@ public interface PrestamoDAO
 
     public boolean consultarPrestamoEspecifico(DefaultTableModel modelo, int idEstudiante);
 
-
+    public boolean actualizarEstadoDePrestamoLibro(int idPrestamo);
 }
